@@ -1,0 +1,250 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Second Brick — Design System
+ * Palette: Grey #808080, Dark Red #6D0D12, Light Orange #FBF1E9, Dark Grey Brown #3D2822
+ * Fonts: Cormorant Garamond (headings), Jost as Futura substitute (body)
+ */
+
+@theme inline {
+  --font-serif: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Jost", "Futura", "Trebuchet MS", sans-serif;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 10px;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-cream: var(--cream);
+  --color-brick: var(--brick);
+  --color-brick-deep: var(--brick-deep);
+  --color-cocoa: var(--cocoa);
+  --color-stone: var(--stone);
+}
+
+:root {
+  --radius: 4px;
+
+  /* Brand palette */
+  --cream: oklch(0.966 0.017 65);          /* #FBF1E9 */
+  --brick: oklch(0.36 0.135 24);           /* #6D0D12 */
+  --brick-deep: oklch(0.30 0.115 24);
+  --cocoa: oklch(0.28 0.024 45);           /* #3D2822 */
+  --stone: oklch(0.60 0 0);                /* #808080 */
+
+  --background: oklch(0.966 0.017 65);     /* cream */
+  --foreground: oklch(0.24 0.022 45);      /* cocoa dark */
+
+  --card: oklch(0.985 0.008 65);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.985 0.008 65);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.36 0.135 24);
+  --primary-foreground: oklch(0.98 0.008 65);
+
+  --secondary: oklch(0.92 0.020 60);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(0.93 0.015 60);
+  --muted-foreground: oklch(0.42 0.020 40);
+
+  --accent: oklch(0.36 0.135 24);
+  --accent-foreground: oklch(0.98 0.008 65);
+
+  --destructive: oklch(0.55 0.19 25);
+  --destructive-foreground: oklch(0.98 0.008 65);
+
+  --border: oklch(0.86 0.018 55);
+  --input: oklch(0.88 0.015 55);
+  --ring: oklch(0.36 0.135 24);
+
+  --shadow-soft: 0 20px 50px -30px oklch(0.28 0.024 45 / 0.35);
+  --shadow-card: 0 10px 30px -20px oklch(0.28 0.024 45 / 0.25);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--cocoa);
+  }
+
+  h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1.05; }
+  h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.15; }
+  h3 { font-size: 1.35rem; line-height: 1.3; }
+
+  ::selection { background: var(--brick); color: var(--cream); }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brick);
+}
+
+@utility rule-line {
+  display: inline-block;
+  width: 48px;
+  height: 1px;
+  background: var(--brick);
+  vertical-align: middle;
+}
+
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--brick);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.8rem;
+  border: 1px solid var(--brick);
+  transition: all 0.35s ease;
+  cursor: pointer;
+  &:hover { background: var(--brick-deep); border-color: var(--brick-deep); transform: translateY(-1px); }
+}
+
+@utility btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.8rem;
+  border: 1px solid var(--cream);
+  transition: all 0.35s ease;
+  cursor: pointer;
+  &:hover { background: var(--cream); color: var(--cocoa); }
+}
+
+@utility btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--brick);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.7rem;
+  border: 1px solid var(--brick);
+  transition: all 0.35s ease;
+  cursor: pointer;
+  &:hover { background: var(--brick); color: var(--cream); }
+}
+
+@utility container-x {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  @media (min-width: 768px) { padding-inline: 2.5rem; }
+}
+
+@utility section-y {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, oklch(0.28 0.024 45 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.28 0.024 45 / 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@utility v-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+@keyframes mask-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@utility reveal-x {
+  animation: mask-reveal 1.1s cubic-bezier(.65,.05,.36,1) both;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@utility float-slow { animation: float-y 6s ease-in-out infinite; }
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@utility rotate-slow { animation: spin-slow 40s linear infinite; }
+
