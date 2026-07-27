@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Calendar, User, ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
-import heroBlogs from "@/assets/hero-blogs.jpg";
+import { getStoredBlogs } from "@/lib/contentStore";
+import { ArrowUpRight } from "lucide-react";
+import heroInsights from "@/assets/hero-insights.jpg";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
 import responsibility from "@/assets/responsibility.jpg";
 
-export const Route = createFileRoute("/blogs")({
+export const Route = createFileRoute("/insights")({
   head: () => ({
     meta: [
       { title: "Insights & Updates — Second Brick Blog" },
@@ -17,75 +18,108 @@ export const Route = createFileRoute("/blogs")({
       { property: "og:description", content: "Real estate knowledge, market trends and investment insights." },
     ],
   }),
-  component: Blogs,
+  component: Insights,
 });
 
 const categories = ["All", "Investment", "Market Updates", "Buying Guide", "Project News", "Lifestyle"];
 
-const posts = [
+const defaultPosts = [
   {
-    img: project1,
-    cat: "Investment",
-    title: "Why Alibaug is India's Next Coastal Growth Story",
-    excerpt: "Infrastructure upgrades, second-home demand, and shifting lifestyle preferences are quietly rewriting the coastal investment map.",
-    author: "Namrata Malu",
-    date: "Mar 12, 2026",
-    featured: true,
-  },
-  {
+    id: "1",
     img: project2,
     cat: "Market Updates",
     title: "Mumbai Redevelopment — What Buyers Should Watch in 2026",
     excerpt: "Policy shifts, floor space rules and new corridors that will define value over the next decade.",
     author: "PRO-DEV Editorial",
     date: "Feb 22, 2026",
+    articleUrl: "https://economictimes.indiatimes.com",
   },
   {
+    id: "2",
     img: project3,
     cat: "Buying Guide",
     title: "The First-Time Investor's Guide to Township Living",
     excerpt: "What to look for when master-planned communities are your entry point into real estate.",
     author: "Ar. Maheshkumar Nawander",
     date: "Feb 04, 2026",
+    articleUrl: "",
   },
   {
+    id: "3",
     img: responsibility,
     cat: "Lifestyle",
     title: "Building Green — Sustainable Choices That Add Value",
     excerpt: "Small material and design decisions that reduce lifetime costs and increase resale strength.",
     author: "Second Brick",
     date: "Jan 28, 2026",
+    articleUrl: "",
   },
   {
+    id: "4",
     img: project2,
     cat: "Project News",
     title: "Urban Skyline Residences Reaches Structural Completion",
     excerpt: "A milestone update from our Vile Parle site — timelines, finishes and possession outlook.",
     author: "PRO-DEV",
     date: "Jan 10, 2026",
+    articleUrl: "",
   },
   {
+    id: "5",
     img: project1,
     cat: "Investment",
     title: "How to Evaluate a Second-Home Investment",
     excerpt: "A practical framework for weighing yield, appreciation, usage and holding costs.",
     author: "Namrata Malu",
     date: "Dec 18, 2025",
+    articleUrl: "",
   },
 ];
 
-function Blogs() {
+function Insights() {
   const [active, setActive] = useState("All");
-  const featured = posts.find((p) => p.featured)!;
-  const rest = posts.filter((p) => !p.featured);
-  const filtered = active === "All" ? rest : rest.filter((p) => p.cat === active);
+  const [dynamicBlogs, setDynamicBlogs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const stored = getStoredBlogs().map((b) => ({
+      id: b.id,
+      img: b.featuredImage || "",
+      cat: b.cat || "Investment",
+      title: b.title,
+      excerpt: b.excerpt || b.description,
+      author: b.author || "Second Brick Editorial",
+      date: b.date || "2026",
+      articleUrl: b.articleUrl || "",
+    }));
+    setDynamicBlogs(stored);
+
+    const handleUpdate = () => {
+      const updated = getStoredBlogs().map((b) => ({
+        id: b.id,
+        img: b.featuredImage || "",
+        cat: b.cat || "Investment",
+        title: b.title,
+        excerpt: b.excerpt || b.description,
+        author: b.author || "Second Brick Editorial",
+        date: b.date || "2026",
+        articleUrl: b.articleUrl || "",
+      }));
+      setDynamicBlogs(updated);
+    };
+
+    window.addEventListener("content_store_updated", handleUpdate);
+    return () => window.removeEventListener("content_store_updated", handleUpdate);
+  }, []);
+
+  const allPosts = dynamicBlogs;
+  const filtered = active === "All" ? allPosts : allPosts.filter((p) => p.cat === active);
 
   return (
     <>
       {/* HERO */}
-      <section className="relative pt-32 md:pt-40 pb-20 overflow-hidden">
+      <section className="relative pt-28 md:pt-36 pb-10 overflow-hidden bg-cream">
         <img
-          src={heroBlogs}
+          src={heroInsights}
           alt="Open book with pen in warm light"
           width={1920}
           height={900}
@@ -104,43 +138,6 @@ function Blogs() {
             Real estate knowledge, market trends and investment insights — from the desks of
             PRO-DEV & Nawander Group.
           </p>
-        </div>
-      </section>
-
-      {/* FEATURED ARTICLE */}
-      <section className="pb-20">
-        <div className="container-x">
-          <a href="#featured" className="group grid lg:grid-cols-2 gap-10 items-center bg-cream border border-border overflow-hidden">
-            <div className="aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden">
-              <img
-                src={featured.img}
-                alt={featured.title}
-                width={1200}
-                height={900}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            </div>
-            <div className="p-8 lg:p-14">
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] tracking-[0.24em] uppercase bg-brick text-cream px-3 py-1.5">Featured</span>
-                <span className="eyebrow">{featured.cat}</span>
-              </div>
-              <h2 className="mt-6 font-serif text-3xl md:text-4xl text-cocoa leading-tight">
-                {featured.title}
-              </h2>
-              <p className="mt-5 text-base text-muted-foreground leading-relaxed">
-                {featured.excerpt}
-              </p>
-              <div className="mt-8 flex items-center gap-6 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" /> {featured.author}</span>
-                <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {featured.date}</span>
-              </div>
-              <div className="mt-8 inline-flex items-center gap-2 text-[11px] tracking-[0.24em] uppercase text-brick group-hover:gap-3 transition-all">
-                Read Article <ArrowUpRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-          </a>
         </div>
       </section>
 
@@ -164,29 +161,66 @@ function Blogs() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((p) => (
-              <article key={p.title} className="group cursor-pointer">
-                <div className="aspect-[4/3] overflow-hidden mb-5">
-                  <img
-                    src={p.img}
-                    alt={p.title}
-                    width={1200}
-                    height={900}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+            {filtered.map((p) => {
+              const targetUrl = p.articleUrl?.trim();
+              const hasExternalLink = Boolean(targetUrl);
+
+              const cardContent = (
+                <div className="h-full flex flex-col justify-between">
+                  <div>
+                    {p.img && p.img.trim() !== "" && (
+                      <div className="aspect-[4/3] overflow-hidden mb-5 bg-secondary relative">
+                        <img
+                          src={p.img}
+                          alt={p.title}
+                          width={1200}
+                          height={900}
+                          loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <div className="eyebrow">{p.cat}</div>
+                      {hasExternalLink && (
+                        <span className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase font-semibold text-brick">
+                          <span>Read Full Article</span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="mt-3 font-serif text-2xl text-cocoa leading-tight group-hover:text-brick transition-colors">
+                      {p.title}
+                    </h3>
+                    <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{p.excerpt}</p>
+                  </div>
+                  <div className="mt-5 flex items-center justify-between text-xs text-muted-foreground pt-4 border-t border-cream/50">
+                    <span>{p.author}</span>
+                    <span>{p.date}</span>
+                  </div>
                 </div>
-                <div className="eyebrow">{p.cat}</div>
-                <h3 className="mt-3 font-serif text-2xl text-cocoa leading-tight group-hover:text-brick transition-colors">
-                  {p.title}
-                </h3>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{p.excerpt}</p>
-                <div className="mt-5 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{p.author}</span>
-                  <span>{p.date}</span>
-                </div>
-              </article>
-            ))}
+              );
+
+              if (hasExternalLink) {
+                return (
+                  <a
+                    key={p.id || p.title}
+                    href={targetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group cursor-pointer block p-5 rounded-none bg-[#FBF1E9] border border-[#6D0D12]/15 hover:bg-[#F5E6D8] transition-all hover:shadow-sm"
+                  >
+                    {cardContent}
+                  </a>
+                );
+              }
+
+              return (
+                <article key={p.id || p.title} className="group cursor-pointer p-5 rounded-none bg-[#FBF1E9] border border-[#6D0D12]/15 hover:bg-[#F5E6D8] transition-all">
+                  {cardContent}
+                </article>
+              );
+            })}
           </div>
 
           {filtered.length === 0 && (
@@ -218,3 +252,4 @@ function Blogs() {
     </>
   );
 }
+

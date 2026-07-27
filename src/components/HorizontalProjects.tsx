@@ -1,20 +1,35 @@
 import { Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { getStoredProjects } from "@/lib/contentStore";
 import project1 from "@/assets/project-1.jpg";
-import project2 from "@/assets/project-2.jpg";
-import project3 from "@/assets/project-3.jpg";
-
-const projects = [
-  { img: project1, name: "Coastal Retreat", location: "Alibaug, Maharashtra", status: "Upcoming", coords: "18.6414° N  72.8722° E", n: "01" },
-  { img: project2, name: "Urban Skyline Residences", location: "Mumbai, Maharashtra", status: "Ongoing", coords: "19.0760° N  72.8777° E", n: "02" },
-  { img: project3, name: "Nawander Township", location: "Pune, Maharashtra", status: "Completed", coords: "18.5204° N  73.8567° E", n: "03" },
-  { img: project1, name: "Latur Legacy Estates", location: "Latur, Maharashtra", status: "Upcoming", coords: "18.4088° N  76.5604° E", n: "04" },
-];
 
 export function HorizontalProjects() {
   const [hover, setHover] = useState<number | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const [projectsList, setProjectsList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadProjects = () => {
+      const stored = getStoredProjects()
+        .filter((p) => p.featuredOnHomepage !== false)
+        .map((p, idx) => ({
+          id: p.id,
+          img: p.featuredImage || project1,
+          name: p.title,
+          location: p.location || "Maharashtra",
+          status: p.status || "Ongoing",
+          n: idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`,
+        }));
+      setProjectsList(stored);
+    };
+
+    loadProjects();
+    window.addEventListener("content_store_updated", loadProjects);
+    return () => window.removeEventListener("content_store_updated", loadProjects);
+  }, []);
+
+  const displayProjects = projectsList.length > 0 ? projectsList : [];
 
   return (
     <div className="relative">
@@ -24,16 +39,16 @@ export function HorizontalProjects() {
           [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-cocoa/5
           [&::-webkit-scrollbar-thumb]:bg-brick/40"
       >
-        {projects.map((p, i) => {
+        {displayProjects.map((p, i) => {
           const isHover = hover === i;
           return (
             <Link
-              key={i}
+              key={p.id || i}
               to="/portfolio"
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
               className={`relative shrink-0 snap-start overflow-hidden group transition-[width,transform] duration-700 ease-[cubic-bezier(.65,.05,.36,1)]
-                h-[70vh] max-h-[640px]
+                h-[70vh] max-h-[640px] rounded-none
                 ${isHover ? "w-[70vw] md:w-[640px]" : "w-[42vw] md:w-[380px]"}`}
               style={{ minWidth: 280 }}
             >
@@ -58,9 +73,6 @@ export function HorizontalProjects() {
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 p-7 text-cream">
-                <div className="text-[10px] tracking-[0.28em] uppercase opacity-70 mb-3">
-                  {p.coords}
-                </div>
                 <h3 className="font-serif text-3xl md:text-4xl leading-tight">{p.name}</h3>
                 <div className="text-sm opacity-80 mt-2">{p.location}</div>
 
@@ -77,7 +89,7 @@ export function HorizontalProjects() {
 
       <div className="px-6 md:px-16 mt-6 flex items-center justify-between text-[11px] tracking-[0.28em] uppercase text-cocoa/60">
         <span>Drag or scroll →</span>
-        <span>{projects.length} projects</span>
+        <span>{displayProjects.length} projects</span>
       </div>
     </div>
   );

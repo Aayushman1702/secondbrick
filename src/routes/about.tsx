@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { SectionHeading } from "@/components/SectionHeading";
-import { Timeline } from "@/components/Timeline";
-import { ValuesRadial } from "@/components/ValuesRadial";
+import { Gem, Globe2, Handshake, KeyRound, Sparkles } from "lucide-react";
 import heroAbout from "@/assets/hero-about.jpg";
+import presenceMap from "@/assets/presence-map.png";
+import prodevFull from "@/assets/logo-prodev-full.png";
+import nawanderLogo from "@/assets/logo-nawander.png";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -25,13 +26,7 @@ const leaders = [
     bio: "Brings nearly three decades of PRO-DEV's redevelopment experience — quality construction and dependable delivery across Mumbai and Goa.",
     initials: "NM",
   },
-  {
-    name: "Ar. Maheshkumar Nawander",
-    group: "Nawander Group",
-    role: "Design Principal",
-    bio: "Deep expertise in architectural planning and design, shaping Nawander Group's townships and institutional developments over 15+ years.",
-    initials: "MN",
-  },
+  
   {
     name: "Nitinkumar Nawander",
     group: "Nawander Group",
@@ -42,10 +37,18 @@ const leaders = [
 ];
 
 const cities = [
-  { c: "Mumbai", coord: "19.0760° N  72.8777° E", focus: "Coastal & redevelopment", n: "01" },
-  { c: "Pune", coord: "18.5204° N  73.8567° E", focus: "Township & residential", n: "02" },
-  { c: "Latur", coord: "18.4088° N  76.5604° E", focus: "Emerging growth market", n: "03" },
-  { c: "Alibaug", coord: "18.6414° N  72.8722° E", focus: "Coastal luxury", n: "04" },
+  { c: "Mumbai", focus: "Coastal & redevelopment", n: "01" },
+  { c: "Pune", focus: "Township & residential", n: "02" },
+  { c: "Latur", focus: "Emerging growth market", n: "03" },
+  { c: "Alibaug", focus: "Coastal luxury", n: "04" },
+];
+
+const foundations = [
+  { title: "National Presence", description: "A thoughtful footprint across Maharashtra, shaped by local insight and long-term commitment.", icon: Globe2 },
+  { title: "Iconic Collaborations", description: "Trusted partnerships that bring considered design, exceptional quality and lasting value to life.", icon: Handshake },
+  { title: "Hospitality-Driven", description: "Homes and spaces designed around comfort, care and the details that make everyday living exceptional.", icon: KeyRound },
+  { title: "Lifestyle Amenities", description: "Curated experiences that create a richer, more connected way to live.", icon: Sparkles },
+  { title: "Global Trust", description: "A reputation built on transparency, consistency and a standard that travels well.", icon: Gem },
 ];
 
 function About() {
@@ -54,21 +57,35 @@ function About() {
   return (
     <>
       {/* HERO — editorial cinematic */}
-      <section className="relative pt-40 pb-24 md:pt-52 md:pb-32 overflow-hidden bg-cream">
+      <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden bg-cream">
         <img
           src={heroAbout}
           alt="Interior with arched windows"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          className="absolute inset-0 w-full h-full object-cover opacity-100"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-cream via-cream/70 to-cream" />
         <div className="absolute top-24 right-6 md:right-10 v-text text-brick">— Chapter One / About</div>
         <div className="container-x relative">
           <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-6">— About / 001</div>
-          <h1 className="font-serif reveal-x" style={{ fontSize: "clamp(3rem, 8vw, 6rem)", lineHeight: 0.95 }}>
-            Two Legacies.
-            <br />
-            <em className="italic text-brick">One shared vision.</em>
-          </h1>
+         <h1
+  className="font-serif reveal-x max-w-5xl"
+  style={{
+    fontSize: "clamp(2.6rem, 5vw, 4.8rem)",
+    lineHeight: 0.92,
+    letterSpacing: "-0.03em",
+  }}
+>
+  A partnership built
+  <br />
+  <em
+    className="italic text-brick"
+    style={{
+      fontSize: "0.96em",
+    }}
+  >
+    experience & excellence.
+  </em>
+</h1>
           <p className="mt-10 text-lg leading-relaxed text-muted-foreground max-w-2xl">
             Second Brick combines the expertise of PRO-DEV and Nawander Group to deliver
             exceptional real estate experiences through innovation, integrity, and long-term
@@ -77,25 +94,91 @@ function About() {
         </div>
       </section>
 
-      {/* STORY — vertical timeline */}
-      <section id="story" className="section-y bg-secondary/40 relative overflow-hidden">
+      {/* HISTORY — two founding companies */}
+      <section id="history" className="section-y bg-secondary/40 relative overflow-hidden">
         <div className="container-x">
-          <div className="text-center mb-16">
-            <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">— 02 / Our Story</div>
-            <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}>
-              A story written <em className="italic text-brick">brick by brick</em>.
-            </h2>
+          <div className="grid lg:grid-cols-12 gap-10 mb-14 lg:items-end">
+            <div className="lg:col-span-5">
+              <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">02 / Our History</div>
+              <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)", lineHeight: 1.05 }}>
+                Two histories.<br />One shared <em className="italic text-brick">direction</em>.
+              </h2>
+            </div>
+            <p className="lg:col-span-7 text-lg leading-relaxed text-muted-foreground lg:max-w-2xl lg:justify-self-end">
+              Second Brick brings together two distinct real estate legacies — each grounded in local knowledge, disciplined execution and a belief in building for the long term.
+            </p>
           </div>
-          <Timeline />
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            <article className="group relative overflow-hidden bg-[#2D1E1A] p-8 md:p-10 text-[#FBF1E9] min-h-[320px] rounded-none shadow-lg border border-[#FBF1E9]/10">
+              <div className="absolute top-0 right-0 h-32 w-32 border-l border-b border-[#FBF1E9]/15 rounded-bl-full transition-transform duration-500 group-hover:scale-125 pointer-events-none" />
+              <div className="relative flex h-full flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.3em] uppercase text-[#FBF1E9]/90">
+                    <span>PRO-DEV</span>
+                    <span>EST. 1994</span>
+                  </div>
+                  <div className="mt-6 mb-4 h-14 flex items-center">
+                    <img src={prodevFull} alt="PRO-DEV" className="h-12 w-auto object-contain brightness-125 filter drop-shadow-[0_2px_10px_rgba(255,255,255,0.25)]" />
+                  </div>
+                  <h3 className="mt-4 font-serif text-3xl md:text-4xl text-[#FBF1E9] font-bold tracking-tight">A legacy of renewal.</h3>
+                  <p className="mt-4 max-w-md leading-relaxed text-[#FBF1E9]/90 text-sm md:text-base font-normal">
+                    For nearly three decades, PRO-DEV has shaped redevelopment in Mumbai and Goa, creating reliable, well-crafted spaces with a clear focus on quality and delivery.
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            <article className="group relative overflow-hidden border border-[#6D0D12]/20 bg-[#FBF1E9] p-8 md:p-10 min-h-[320px] rounded-none shadow-md">
+              <div className="absolute bottom-0 left-0 h-32 w-32 border-r border-t border-[#6D0D12]/15 rounded-tr-full transition-transform duration-500 group-hover:scale-125 pointer-events-none" />
+              <div className="relative flex h-full flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.3em] uppercase text-[#6D0D12]">
+                    <span>Nawander Group</span>
+                    <span>EST. 2005</span>
+                  </div>
+                  <div className="mt-6 mb-4 h-14 flex items-center">
+                    <img src={nawanderLogo} alt="Nawander logo" className="h-12 w-auto object-contain" />
+                  </div>
+                  <h3 className="mt-4 font-serif text-3xl md:text-4xl text-[#3D2822] font-bold tracking-tight">A vision for growth.</h3>
+                  <p className="mt-4 max-w-md leading-relaxed text-[#3D2822]/85 text-sm md:text-base font-normal">
+                    Nawander Group has earned its reputation through considered residential and township development across Pune and Latur, combining ambition with practical execution.
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* FOUNDATIONS — feature cards */}
+      <section className="pt-16 pb-16 md:pt-24 md:pb-20 bg-cream text-cocoa relative overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-[0.04]" />
+        <div className="container-x relative">
+          <div className="max-w-xl">
+            <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">03 / Our Foundation</div>
+            <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", lineHeight: 1.05 }}>The foundation<br />of our <em className="italic text-brick">success</em>.</h2>
+          </div>
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+            {foundations.map(({ title, description, icon: Icon }, index) => (
+              <article key={title} className="group relative min-h-[300px] border border-cocoa/15 bg-cream p-6 transition-colors hover:bg-secondary/50">
+                <span className="text-[10px] tracking-[0.25em] text-cocoa/45">0{index + 1}</span>
+                <div className="mt-8 flex h-11 w-11 items-center justify-center rounded-full bg-brick text-cream shadow-[0_0_24px_rgba(109,13,18,0.3)] transition-transform duration-300 group-hover:-translate-y-1">
+                  <Icon className="h-5 w-5" strokeWidth={1.5} />
+                </div>
+                <h3 className="mt-7 font-serif text-xl text-cocoa">{title}</h3>
+                <p className="mt-4 text-sm leading-relaxed text-cocoa/65">{description}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* LEADERSHIP — magazine profiles */}
-      <section className="section-y">
+      <section className="pt-12 pb-20 md:pt-16 md:pb-28">
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 mb-20">
             <div className="lg:col-span-5">
-              <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">— 03 / Leadership</div>
+              <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">— 04 / Leadership</div>
               <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.2rem)", lineHeight: 1.05 }}>
                 The people behind
                 <br />
@@ -140,63 +223,43 @@ function About() {
         </div>
       </section>
 
-      {/* VALUES — interactive radial */}
-      <section id="values" className="section-y bg-cocoa text-cream relative overflow-hidden">
-        <div className="absolute inset-0 grid-bg opacity-20" />
+      {/* PRESENCE — 05 */}
+      <section id="presence" className="pt-14 md:pt-20 pb-10 md:pb-14 bg-cocoa text-cream relative overflow-hidden">
         <div className="container-x relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="text-[10px] tracking-[0.35em] uppercase text-cream/60 mb-4">— 04 / Values</div>
-              <h2 className="font-serif text-cream" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)", lineHeight: 1.05 }}>
-                Principles that shape
-                <br />
-                every <em className="italic">square foot</em>.
-              </h2>
-              <p className="mt-8 text-cream/70 max-w-md text-lg leading-relaxed">
-                Eight commitments that hold every project together — from the first sketch
-                to the day residents receive their keys.
-              </p>
-            </div>
-            <ValuesRadial />
-          </div>
-        </div>
-      </section>
-
-      {/* PRESENCE */}
-      <section id="presence" className="section-y">
-        <div className="container-x">
-          <div className="mb-16">
-            <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">— 05 / Presence</div>
-            <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}>
+          <div className="mb-12 md:mb-14">
+            <div className="text-[10px] tracking-[0.35em] uppercase text-cream/80 mb-4">— 06 / Presence</div>
+            <h2 className="font-serif text-cream" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}>
               Rooted in cities that
               <br />
-              <em className="italic text-brick">shape India</em>'s real estate story.
+              <em className="italic text-cream">shape India</em>'s real estate story.
             </h2>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-14">
+          <div className="grid lg:grid-cols-12 gap-14 items-center">
             <div className="lg:col-span-5 space-y-1">
               {cities.map((city, i) => (
                 <button
                   key={city.c}
                   onMouseEnter={() => setActiveCity(i)}
                   onClick={() => setActiveCity(i)}
-                  className={`group w-full text-left border-b border-border py-6 flex items-baseline gap-6 transition-all ${activeCity === i ? "border-brick" : ""}`}
+                  className={`group w-full text-left border-b py-5 flex items-baseline gap-6 transition-all ${activeCity === i ? "border-cream/60" : "border-cream/15"}`}
                 >
-                  <span className={`text-[10px] tracking-[0.3em] uppercase ${activeCity === i ? "text-brick" : "text-cocoa/40"}`}>{city.n}</span>
+                  <span className={`text-[10px] tracking-[0.3em] uppercase ${activeCity === i ? "text-cream font-bold" : "text-cream/40"}`}>{city.n}</span>
                   <div className="flex-1">
-                    <div className={`font-serif text-4xl transition-colors ${activeCity === i ? "text-brick italic" : "text-cocoa"}`}>{city.c}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{city.focus}</div>
+                    <div className={`font-serif text-4xl transition-colors ${activeCity === i ? "text-cream italic" : "text-cream/70"}`}>{city.c}</div>
+                    <div className="text-sm text-cream/65 mt-1">{city.focus}</div>
                   </div>
-                  <span className={`text-[10px] tracking-[0.28em] uppercase transition-opacity ${activeCity === i ? "opacity-100 text-brick" : "opacity-40"}`}>
-                    {city.coord}
-                  </span>
                 </button>
               ))}
             </div>
 
-            <div className="lg:col-span-7 relative aspect-[4/5] bg-cocoa overflow-hidden grain">
-              <svg viewBox="0 0 400 500" className="absolute inset-0 w-full h-full text-cream/25">
+            <div className="lg:col-span-7 relative aspect-[4/3] md:aspect-[16/11] lg:w-[calc(100%+3rem)] overflow-hidden lg:translate-x-3 group">
+              <img
+                src={presenceMap}
+                alt="3D map showing Second Brick's location presence across Mumbai, Pune, Latur and Goa"
+                className="absolute inset-0 h-full w-full object-contain p-2 drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 group-hover:scale-105"
+              />
+              <svg viewBox="0 0 400 500" className="hidden absolute inset-0 w-full h-full text-cream/25">
                 {/* Stylized Maharashtra outline */}
                 <path
                   d="M60,180 Q80,120 140,110 Q210,90 260,130 Q320,150 340,220 Q350,280 320,340 Q290,410 210,430 Q140,440 90,400 Q50,340 60,270 Z"
@@ -224,10 +287,10 @@ function About() {
                   </g>
                 ))}
               </svg>
-              <div className="absolute bottom-6 left-6 text-cream/60 text-[10px] tracking-[0.3em] uppercase">
+              <div className="hidden absolute bottom-6 left-6 text-cream/60 text-[10px] tracking-[0.3em] uppercase">
                 Maharashtra, India
               </div>
-              <div className="absolute top-6 right-6 text-cream/60 text-[10px] tracking-[0.3em] uppercase">
+              <div className="hidden absolute top-6 right-6 text-cream/60 text-[10px] tracking-[0.3em] uppercase">
                 Presence Map · 01
               </div>
             </div>
@@ -237,3 +300,4 @@ function About() {
     </>
   );
 }
+ 

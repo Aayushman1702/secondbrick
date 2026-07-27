@@ -198,7 +198,7 @@
 }
 
 @utility section-y {
-  padding-block: clamp(4rem, 8vw, 7rem);
+  padding-block: clamp(2.5rem, 5vw, 4rem);
 }
 
 @utility grid-bg {

@@ -64,7 +64,7 @@ function Inquire() {
   return (
     <>
       {/* HERO */}
-      <section className="relative pt-32 md:pt-40 pb-20 overflow-hidden">
+      <section className="relative pt-28 md:pt-36 pb-10 overflow-hidden">
         <img
           src={heroInquire}
           alt="Welcoming reception interior"

@@ -23,7 +23,7 @@ const nav = [
       { label: "Upcoming Projects", to: "/portfolio", hash: "upcoming" },
     ],
   },
-  { label: "Blogs", to: "/blogs" },
+ { label: "Insights", to: "/insights" },
 ];
 
 export function Header() {
@@ -46,14 +46,8 @@ export function Header() {
       }`}
     >
       <div className="container-x flex items-center justify-between h-20">
-        <Link to="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
-          <img src={logo} alt="Second Brick" width={40} height={40} className="w-9 h-9" />
-          <div className="leading-none">
-            <div className="font-serif text-xl text-cocoa tracking-tight">Second Brick</div>
-            <div className="text-[10px] tracking-[0.28em] uppercase text-brick/80 mt-0.5">
-              Est. Legacy
-            </div>
-          </div>
+        <Link to="/" className="flex items-center group py-1" onClick={() => setOpen(false)}>
+          <img src={logo} alt="Second Brick — Advise.Assist.Buy.Sell" className="h-10 sm:h-11 w-auto object-contain" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-10">
@@ -61,8 +55,11 @@ export function Header() {
             <div key={item.label} className="relative group">
               <Link
                 to={item.to}
-                className="flex items-center gap-1 text-[13px] tracking-[0.14em] uppercase text-cocoa hover:text-brick transition-colors py-2"
-                activeProps={{ className: "text-brick" }}
+                activeOptions={item.to === "/" ? { exact: true } : undefined}
+                className="relative flex items-center gap-1 text-[13px] tracking-[0.14em] uppercase text-cocoa hover:text-brick transition-colors py-2 font-medium"
+                activeProps={{
+                  className: "text-brick font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-brick after:rounded-full",
+                }}
               >
                 {item.label}
                 {item.children && <ChevronDown className="w-3.5 h-3.5 opacity-60" />}
@@ -76,6 +73,7 @@ export function Header() {
                         to={c.to}
                         hash={c.hash}
                         className="block px-5 py-2.5 text-[13px] text-cocoa hover:bg-secondary hover:text-brick transition-colors"
+                        activeProps={{ className: "bg-secondary/70 text-brick font-medium" }}
                       >
                         {c.label}
                       </Link>
@@ -109,8 +107,12 @@ export function Header() {
               <Link
                 key={item.label}
                 to={item.to}
+                activeOptions={item.to === "/" ? { exact: true } : undefined}
                 onClick={() => setOpen(false)}
                 className="py-3 border-b border-border/60 text-sm tracking-[0.14em] uppercase text-cocoa hover:text-brick"
+                activeProps={{
+                  className: "text-brick font-semibold border-b-2 border-brick",
+                }}
               >
                 {item.label}
               </Link>

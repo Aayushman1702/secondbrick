@@ -1,15 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, Mail, MapPin } from "lucide-react";
-import logo from "@/assets/logo.png";
+import logoWhite from "@/assets/logo-white.png";
 
 export function Footer() {
   return (
-    <footer className="bg-cocoa text-cream/80 mt-0">
+    <footer className="bg-cocoa text-cream/80 border-t border-cream/10">
       <div className="container-x py-20 grid gap-14 md:grid-cols-2 lg:grid-cols-4">
         <div className="max-w-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <img src={logo} alt="Second Brick" width={40} height={40} className="w-10 h-10 brightness-0 invert opacity-90" />
-            <div className="font-serif text-2xl text-cream">Second Brick</div>
+          <div className="mb-6">
+            <img src={logoWhite} alt="Second Brick — Advise.Assist.Buy.Sell" className="h-11 w-auto object-contain opacity-95" />
           </div>
           <p className="text-sm leading-relaxed text-cream/70">
             A strategic partnership between PRO-DEV and Nawander Group, delivering trusted
@@ -27,7 +26,7 @@ export function Footer() {
               { l: "Home", to: "/" },
               { l: "About", to: "/about" },
               { l: "Portfolio", to: "/portfolio" },
-              { l: "Blogs", to: "/blogs" },
+             { l: "Insights", to: "/insights" },
               { l: "Inquire", to: "/inquire" },
             ].map((i) => (
               <li key={i.l}>
@@ -81,7 +80,11 @@ export function Footer() {
       <div className="border-t border-cream/10">
         <div className="container-x py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[12px] text-cream/50">
           <p>© 2026 Second Brick. All Rights Reserved.</p>
-          <p className="tracking-[0.2em] uppercase">PRO-DEV × Nawander Group</p>
+          <div className="flex items-center gap-4">
+            <p className="tracking-[0.2em] uppercase">PRO-DEV × Nawander Group</p>
+            <span className="opacity-30">|</span>
+            <Link to="/admin" className="hover:text-cream transition-colors underline underline-offset-2">Admin Portal</Link>
+          </div>
         </div>
       </div>
     </footer>

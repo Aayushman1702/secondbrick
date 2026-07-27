@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapPin, ArrowUpRight } from "lucide-react";
 import { SectionHeading } from "@/components/SectionHeading";
+import { HorizontalProjects } from "@/components/HorizontalProjects";
+import { getStoredProjects } from "@/lib/contentStore";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
@@ -27,7 +29,7 @@ type Project = {
   description: string;
 };
 
-const projects: Project[] = [
+const defaultProjects: Project[] = [
   {
     img: project1,
     name: "Coastal Retreat",
@@ -88,13 +90,43 @@ type TabId = typeof tabs[number]["id"];
 
 function Portfolio() {
   const [active, setActive] = useState<TabId>("ongoing");
+  const [dynamicProjects, setDynamicProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const stored = getStoredProjects().map((p) => ({
+      img: p.featuredImage || project1,
+      name: p.title,
+      location: p.location || "Maharashtra",
+      status: (p.status as any) || "Ongoing",
+      config: `${p.type} · ${p.sqft} sq.ft`,
+      description: p.description,
+    }));
+    setDynamicProjects(stored);
+
+    const handleUpdate = () => {
+      const updated = getStoredProjects().map((p) => ({
+        img: p.featuredImage || project1,
+        name: p.title,
+        location: p.location || "Maharashtra",
+        status: (p.status as any) || "Ongoing",
+        config: `${p.type} · ${p.sqft} sq.ft`,
+        description: p.description,
+      }));
+      setDynamicProjects(updated);
+    };
+
+    window.addEventListener("content_store_updated", handleUpdate);
+    return () => window.removeEventListener("content_store_updated", handleUpdate);
+  }, []);
+
+  const allProjects = dynamicProjects;
   const filter = active === "ongoing" ? "Ongoing" : active === "upcoming" ? "Upcoming" : "Completed";
-  const filtered = projects.filter((p) => p.status === filter);
+  const filtered = allProjects.filter((p) => p.status === filter);
 
   return (
     <>
       {/* HERO */}
-      <section className="pt-32 md:pt-40 pb-16 bg-secondary/40">
+      <section className="pt-28 md:pt-36 pb-8 bg-secondary/40">
         <div className="container-x max-w-4xl">
           <div className="flex items-center gap-3 mb-6">
             <span className="rule-line" />
@@ -108,6 +140,11 @@ function Portfolio() {
             commercial, and infrastructure sectors.
           </p>
         </div>
+      </section>
+
+      {/* FEATURED CARDS SLIDER (HOME PAGE LANDMARK ANIMATION) */}
+      <section className="py-6 md:py-8 bg-cream overflow-hidden">
+        <HorizontalProjects />
       </section>
 
       {/* TABS */}
@@ -139,7 +176,7 @@ function Portfolio() {
               {filtered.map((p) => (
                 <article
                   key={p.name}
-                  className="group bg-cream border border-border overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-[var(--shadow-card)]"
+                  className="group bg-[#FBF1E9] border border-[#6D0D12]/15 rounded-none overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-sm"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <img

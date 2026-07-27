@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Leaf, ShieldCheck, Users } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Building2, GraduationCap, Hammer, HandHeart, HeartHandshake } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Counter } from "@/components/Counter";
 import { HorizontalProjects } from "@/components/HorizontalProjects";
 import { MagneticButton } from "@/components/MagneticButton";
 import hero from "@/assets/hero-home.jpg";
-import responsibility from "@/assets/responsibility.jpg";
+import prodevFull from "@/assets/logo-prodev-full.png";
+import nawanderLogo from "@/assets/logo-nawander.png";
+import { ScrollInterestModal } from "@/components/ScrollInterestModal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +32,15 @@ function useReveal() {
   }, []);
   return { ref, shown };
 }
+
+const promises = [
+  { title: "Build With Purpose", description: "Spaces created with intent, meaning and long-term impact.", icon: Hammer },
+  { title: "Sustainable by Design", description: "Solar energy and rainwater harvesting integrated into every development.", icon: Building2 },
+  { title: "Quality You Can Trust", description: "A commitment to excellence in every detail, built with responsibility.", icon: BadgeCheck },
+  { title: "Customer First", description: "Dedicated service and transparent communication focused on your peace of mind.", icon: HandHeart },
+  { title: "Communities That Care", description: "Environmentally responsible living designed for people and the planet.", icon: HeartHandshake },
+  { title: "Empowered Leadership", description: "Driven by visionary leadership, including award-winning entrepreneur Namrata Malu (2023).", icon: GraduationCap },
+];
 
 function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -79,12 +90,10 @@ function Home() {
               <span className="text-[11px] tracking-[0.32em] uppercase">The Next Coastal Growth Market</span>
             </div>
             <div className="mt-12 flex flex-wrap gap-5">
-              <MagneticButton as="a" href="/portfolio" className="btn-primary">
-                Explore Projects <ArrowUpRight className="w-4 h-4" />
+              <MagneticButton as="a" href="/insights" className="btn-primary">
+                Read More <ArrowUpRight className="w-4 h-4" />
               </MagneticButton>
-              <MagneticButton as="a" href="/inquire" className="btn-ghost">
-                Inquire Now
-              </MagneticButton>
+              
             </div>
           </div>
 
@@ -105,7 +114,7 @@ function Home() {
 
 
       {/* FEATURED PROJECTS — horizontal luxury gallery */}
-      <section className="section-y bg-cream">
+      <section className="pt-12 md:pt-16 pb-24 md:pb-36 bg-cream">
         <div className="container-x mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -129,58 +138,38 @@ function Home() {
         </div>
       </section>
 
-      {/* RESPONSIBILITY — split composition */}
-      <section className="section-y bg-secondary/60 relative overflow-hidden">
-        <div className="absolute top-10 right-10 v-text text-cocoa/40">— 04 / Responsibility</div>
-        <div className="container-x grid lg:grid-cols-12 gap-14 items-center">
-          <div className="lg:col-span-6 relative">
-            <div className="relative aspect-[4/5] overflow-hidden">
-              <img
-                src={responsibility}
-                alt="Hands planting near construction"
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-4 border border-cream/70" />
-            </div>
-            {/* Floating annotation */}
-            <div className="absolute -bottom-6 -right-2 md:-right-10 bg-cream border border-brick/20 p-5 max-w-[220px] shadow-[var(--shadow-card)]">
-              <div className="text-[10px] tracking-[0.28em] uppercase text-brick">Fig. 01</div>
-              <div className="mt-2 font-serif text-lg text-cocoa leading-tight">
-                Landscape returned to the land.
-              </div>
-            </div>
+      {/* PROMISES — 04 */}
+      <section id="promises" className="section-y bg-cream relative overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-[0.04]" />
+        <div className="container-x relative">
+          <div className="max-w-2xl">
+            <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">— 04 / Values</div>
+            <h2 className="font-serif text-cocoa" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", lineHeight: 1.05 }}>
+              Our <em className="italic text-brick">Promises</em>.
+            </h2>
+            <p className="mt-5 text-muted-foreground text-lg leading-relaxed">
+              The principles that guide how we plan, build and care for every community.
+            </p>
           </div>
-          <div className="lg:col-span-6 lg:pl-8">
-            <SectionHeading
-              eyebrow="— 04 / Responsibility"
-              title={<>Building responsibly<br /> for <em className="italic text-brick">tomorrow</em>.</>}
-              description="Second Brick balances innovation with sustainability. Through responsible planning, quality construction and customer-first practices, we build spaces that give back to the communities and landscapes that host them."
-            />
-            <div className="mt-10 grid sm:grid-cols-3 gap-8">
-              {[
-                { i: Leaf, l: "Sustainable Design", n: "01" },
-                { i: ShieldCheck, l: "Quality Assurance", n: "02" },
-                { i: Users, l: "Community First", n: "03" },
-              ].map(({ i: Icon, l, n }) => (
-                <div key={l} className="border-t border-brick/30 pt-4">
-                  <div className="flex items-center justify-between">
-                    <Icon className="w-5 h-5 text-brick" strokeWidth={1.4} />
-                    <span className="text-[10px] tracking-[0.3em] uppercase text-brick/60">{n}</span>
-                  </div>
-                  <div className="mt-4 text-sm font-medium text-cocoa">{l}</div>
+        </div>
+        <div className="container-x relative mt-14">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
+            {promises.map(({ title, description, icon: Icon }, index) => (
+              <article key={`${title}-${index}`} style={{ backgroundColor: "#FBF1E9" }} className="min-h-[310px] rounded-[2rem] border border-cocoa/5 p-7 text-center shadow-none flex flex-col justify-between">
+                <div>
+                  <Icon className="mx-auto h-14 w-14 text-brick" strokeWidth={1.45} />
+                  <h3 className="mt-6 font-serif text-[1.4rem] leading-[1.08] text-cocoa">{title}</h3>
+                  <div className="mx-auto mt-5 h-0.5 w-9 bg-brick/80" />
+                  <p className="mt-5 text-sm leading-[1.4] text-cocoa/75">{description}</p>
                 </div>
-              ))}
-            </div>
-            <div className="mt-10">
-              <MagneticButton as="a" href="/about" className="btn-outline">Know More</MagneticButton>
-            </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="relative py-32 md:py-40 bg-cocoa text-cream overflow-hidden grain">
+      <section className="relative py-16 md:py-24 bg-cocoa text-cream overflow-hidden grain">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="font-serif text-[28vw] md:text-[16vw] text-cream/[0.03] leading-none select-none">
@@ -207,6 +196,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <ScrollInterestModal scrollThreshold={300} />
     </>
   );
 }
@@ -216,10 +207,10 @@ function AboutSplit() {
   return (
     <section
       ref={ref}
-      className={`relative py-28 md:py-40 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      className={`relative pt-12 md:pt-16 pb-0 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       {/* Giant background type */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none -translate-y-16 md:-translate-y-24">
         <div className="font-serif italic text-[24vw] md:text-[18vw] text-brick/[0.05] leading-none select-none">
           Legacy
         </div>
@@ -229,9 +220,9 @@ function AboutSplit() {
         <div className="lg:col-span-5 lg:sticky lg:top-32">
           <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-6">— 02 / About</div>
           <h2 className="font-serif" style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", lineHeight: 1.05 }}>
-            A partnership built on
+            Two Legacies
             <br />
-            <em className="italic text-brick">experience</em> & excellence.
+            <em className="italic text-brick">One Shared Vision</em> 
           </h2>
         </div>
         <div className="lg:col-span-7 space-y-8">
@@ -244,21 +235,95 @@ function AboutSplit() {
             Our shared commitment to quality, transparency and timely execution enables us
             to deliver projects that create lasting value for investors and homeowners alike.
           </p>
-          <div className="grid grid-cols-2 gap-8 pt-6 border-t border-brick/20 max-w-lg">
-            <div>
-              <div className="eyebrow">Est. 1994</div>
-              <div className="mt-2 font-serif text-2xl text-cocoa">PRO-DEV</div>
-              <p className="text-sm text-muted-foreground mt-1">Mumbai · Goa</p>
+          
+          <div className="pt-8 max-w-xl">
+            <div className="relative grid grid-cols-2 gap-8 items-end text-center">
+              {/* Center separator dot */}
+              <div className="absolute left-1/2 bottom-8 -translate-x-1/2 text-cocoa/40 text-xl font-bold select-none">
+                ·
+              </div>
+
+              {/* PRO-DEV */}
+              <div className="flex flex-col items-center">
+                <div className="h-16 flex items-center justify-center mb-3">
+                  <img
+                    src={prodevFull}
+                    alt="PRO-DEV"
+                    className="h-14 w-auto object-contain hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="eyebrow text-[11px] tracking-[0.25em]">EST. 1994</div>
+                <div className="mt-2 font-serif text-2xl text-cocoa">PRO-DEV</div>
+                <p className="text-sm text-muted-foreground mt-1">Mumbai · Goa</p>
+              </div>
+
+              {/* Nawander Group */}
+              <div className="flex flex-col items-center">
+                <div className="h-16 flex items-center justify-center mb-3">
+                  <img
+                    src={nawanderLogo}
+                    alt="Nawander logo"
+                    className="h-14 w-auto object-contain hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="eyebrow text-[11px] tracking-[0.25em]">EST. 2005</div>
+                <div className="mt-2 font-serif text-2xl text-cocoa">Nawander Group</div>
+                <p className="text-sm text-muted-foreground mt-1">Pune · Latur</p>
+              </div>
             </div>
-            <div>
-              <div className="eyebrow">Est. 2005</div>
-              <div className="mt-2 font-serif text-2xl text-cocoa">Nawander Group</div>
-              <p className="text-sm text-muted-foreground mt-1">Pune · Latur</p>
+
+            <div className="mt-10 flex justify-center">
+              <Link to="/about" className="btn-outline inline-flex px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-sans">
+                Learn About Us
+              </Link>
             </div>
           </div>
-          <Link to="/about" className="btn-outline inline-flex mt-4">Learn About Us</Link>
+        </div>
+      </div>
+
+      {/* STATS BANNER BAR */}
+      <div className="mt-12 md:mt-16 bg-[#3D2822] text-[#FBF1E9] py-10 md:py-14 border-y border-[#6D0D12]/20">
+        <div className="container-x">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-[#FBF1E9]/15">
+            <div className="flex flex-col items-center justify-center p-2">
+              <div className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#FBF1E9] tracking-tight">
+                <Counter to={30} suffix="+" duration={2000} />
+              </div>
+              <div className="text-xs sm:text-sm font-sans tracking-wide text-[#FBF1E9]/80 mt-2">
+                Years Of Experience
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center p-2 pt-6 md:pt-2">
+              <div className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#FBF1E9] tracking-tight">
+                <Counter to={10} suffix="M+" duration={2000} />
+              </div>
+              <div className="text-xs sm:text-sm font-sans tracking-wide text-[#FBF1E9]/80 mt-2">
+                Sq.ft Delivered
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center p-2 pt-6 md:pt-2">
+              <div className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#FBF1E9] tracking-tight">
+                <Counter to={40} suffix="+" duration={2000} />
+              </div>
+              <div className="text-xs sm:text-sm font-sans tracking-wide text-[#FBF1E9]/80 mt-2">
+                Projects Completed
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center p-2 pt-6 md:pt-2">
+              <div className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#FBF1E9] tracking-tight">
+                <Counter to={10} suffix="K+" duration={2000} />
+              </div>
+              <div className="text-xs sm:text-sm font-sans tracking-wide text-[#FBF1E9]/80 mt-2">
+                Family Served
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+

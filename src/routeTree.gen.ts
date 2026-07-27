@@ -11,10 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as BlogsRouteImport } from './routes/blogs'
 import { Route as InquireRouteImport } from './routes/inquire'
+import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminUploadProjectRouteImport } from './routes/admin/upload-project'
+import { Route as AdminUploadInsightsArticleLinkRouteImport } from './routes/admin/upload-insights.article-link'
+import { Route as AdminUploadInsightsBlogRouteImport } from './routes/admin/upload-insights.blog'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,14 +31,14 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogsRoute = BlogsRouteImport.update({
-  id: '/blogs',
-  path: '/blogs',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const InquireRoute = InquireRouteImport.update({
   id: '/inquire',
   path: '/inquire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -46,55 +51,127 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUploadProjectRoute = AdminUploadProjectRouteImport.update({
+  id: '/admin/upload-project',
+  path: '/admin/upload-project',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUploadInsightsArticleLinkRoute =
+  AdminUploadInsightsArticleLinkRouteImport.update({
+    id: '/admin/upload-insights/article-link',
+    path: '/admin/upload-insights/article-link',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AdminUploadInsightsBlogRoute = AdminUploadInsightsBlogRouteImport.update({
+  id: '/admin/upload-insights/blog',
+  path: '/admin/upload-insights/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blogs': typeof BlogsRoute
   '/inquire': typeof InquireRoute
+  '/insights': typeof InsightsRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
+  '/admin/upload-insights/blog': typeof AdminUploadInsightsBlogRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blogs': typeof BlogsRoute
   '/inquire': typeof InquireRoute
+  '/insights': typeof InsightsRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
+  '/admin/upload-insights/blog': typeof AdminUploadInsightsBlogRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blogs': typeof BlogsRoute
   '/inquire': typeof InquireRoute
+  '/insights': typeof InsightsRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
+  '/admin/upload-insights/blog': typeof AdminUploadInsightsBlogRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/about' | '/blogs' | '/inquire' | '/portfolio' | '/sitemap.xml'
+    | '/'
+    | '/about'
+    | '/inquire'
+    | '/insights'
+    | '/portfolio'
+    | '/sitemap.xml'
+    | '/admin/settings'
+    | '/admin/upload-project'
+    | '/admin/'
+    | '/admin/upload-insights/article-link'
+    | '/admin/upload-insights/blog'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/blogs' | '/inquire' | '/portfolio' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/about'
+    | '/inquire'
+    | '/insights'
+    | '/portfolio'
+    | '/sitemap.xml'
+    | '/admin/settings'
+    | '/admin/upload-project'
+    | '/admin'
+    | '/admin/upload-insights/article-link'
+    | '/admin/upload-insights/blog'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/blogs'
     | '/inquire'
+    | '/insights'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/admin/settings'
+    | '/admin/upload-project'
+    | '/admin/'
+    | '/admin/upload-insights/article-link'
+    | '/admin/upload-insights/blog'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BlogsRoute: typeof BlogsRoute
   InquireRoute: typeof InquireRoute
+  InsightsRoute: typeof InsightsRoute
   PortfolioRoute: typeof PortfolioRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUploadProjectRoute: typeof AdminUploadProjectRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminUploadInsightsArticleLinkRoute: typeof AdminUploadInsightsArticleLinkRoute
+  AdminUploadInsightsBlogRoute: typeof AdminUploadInsightsBlogRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -113,18 +190,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blogs': {
-      id: '/blogs'
-      path: '/blogs'
-      fullPath: '/blogs'
-      preLoaderRoute: typeof BlogsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/inquire': {
       id: '/inquire'
       path: '/inquire'
       fullPath: '/inquire'
       preLoaderRoute: typeof InquireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -141,16 +218,56 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/upload-project': {
+      id: '/admin/upload-project'
+      path: '/admin/upload-project'
+      fullPath: '/admin/upload-project'
+      preLoaderRoute: typeof AdminUploadProjectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/upload-insights/article-link': {
+      id: '/admin/upload-insights/article-link'
+      path: '/admin/upload-insights/article-link'
+      fullPath: '/admin/upload-insights/article-link'
+      preLoaderRoute: typeof AdminUploadInsightsArticleLinkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/upload-insights/blog': {
+      id: '/admin/upload-insights/blog'
+      path: '/admin/upload-insights/blog'
+      fullPath: '/admin/upload-insights/blog'
+      preLoaderRoute: typeof AdminUploadInsightsBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BlogsRoute: BlogsRoute,
   InquireRoute: InquireRoute,
+  InsightsRoute: InsightsRoute,
   PortfolioRoute: PortfolioRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUploadProjectRoute: AdminUploadProjectRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminUploadInsightsArticleLinkRoute: AdminUploadInsightsArticleLinkRoute,
+  AdminUploadInsightsBlogRoute: AdminUploadInsightsBlogRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
