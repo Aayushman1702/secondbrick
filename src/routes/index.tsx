@@ -210,22 +210,62 @@ function AboutSplit() {
       className={`relative pt-12 md:pt-16 pb-0 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       {/* Giant background type */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none -translate-y-16 md:-translate-y-24">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="font-serif italic text-[24vw] md:text-[18vw] text-brick/[0.05] leading-none select-none">
           Legacy
         </div>
       </div>
 
       <div className="container-x relative grid lg:grid-cols-12 gap-14 items-start">
-        <div className="lg:col-span-5 lg:sticky lg:top-32">
-          <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-6">— 02 / About</div>
-          <h2 className="font-serif" style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", lineHeight: 1.05 }}>
-            Two Legacies
-            <br />
-            <em className="italic text-brick">One Shared Vision</em> 
-          </h2>
+        <div className="lg:col-span-5 space-y-10">
+          <div>
+            <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-6">— 02 / About</div>
+            <h2 className="font-serif" style={{ fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)", lineHeight: 1.05 }}>
+              Two Legacies
+              <br />
+              <em className="italic text-brick">One Shared Vision</em> 
+            </h2>
+          </div>
+
+          {/* Logos on the Left */}
+          <div className="pt-2">
+            <div className="relative grid grid-cols-2 gap-6 items-end text-center max-w-md">
+              {/* Center separator dot */}
+              <div className="absolute left-1/2 bottom-6 -translate-x-1/2 text-cocoa/40 text-xl font-bold select-none">
+                ·
+              </div>
+
+              {/* PRO-DEV */}
+              <div className="flex flex-col items-center">
+                <div className="h-14 flex items-center justify-center mb-3">
+                  <img
+                    src={prodevFull}
+                    alt="PRO-DEV"
+                    className="h-12 w-auto object-contain hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="font-serif text-xl text-cocoa">PRO-DEV</div>
+                <p className="text-xs text-muted-foreground mt-1">Mumbai · Goa</p>
+              </div>
+
+              {/* Nawander Group */}
+              <div className="flex flex-col items-center">
+                <div className="h-14 flex items-center justify-center mb-3">
+                  <img
+                    src={nawanderLogo}
+                    alt="Nawander logo"
+                    className="h-12 w-auto object-contain hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="font-serif text-xl text-cocoa">Nawander Group</div>
+                <p className="text-xs text-muted-foreground mt-1">Pune · Latur</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="lg:col-span-7 space-y-8">
+
+        {/* Right side aligned text & CTA button */}
+        <div className="lg:col-span-7 space-y-8 lg:pt-4">
           <p className="text-xl md:text-2xl font-serif italic text-cocoa leading-relaxed">
             "Second Brick is a strategic partnership between PRO-DEV and Nawander Group,
             bringing together decades of collective experience across residential, commercial
@@ -236,47 +276,10 @@ function AboutSplit() {
             to deliver projects that create lasting value for investors and homeowners alike.
           </p>
           
-          <div className="pt-8 max-w-xl">
-            <div className="relative grid grid-cols-2 gap-8 items-end text-center">
-              {/* Center separator dot */}
-              <div className="absolute left-1/2 bottom-8 -translate-x-1/2 text-cocoa/40 text-xl font-bold select-none">
-                ·
-              </div>
-
-              {/* PRO-DEV */}
-              <div className="flex flex-col items-center">
-                <div className="h-16 flex items-center justify-center mb-3">
-                  <img
-                    src={prodevFull}
-                    alt="PRO-DEV"
-                    className="h-14 w-auto object-contain hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="eyebrow text-[11px] tracking-[0.25em]">EST. 1994</div>
-                <div className="mt-2 font-serif text-2xl text-cocoa">PRO-DEV</div>
-                <p className="text-sm text-muted-foreground mt-1">Mumbai · Goa</p>
-              </div>
-
-              {/* Nawander Group */}
-              <div className="flex flex-col items-center">
-                <div className="h-16 flex items-center justify-center mb-3">
-                  <img
-                    src={nawanderLogo}
-                    alt="Nawander logo"
-                    className="h-14 w-auto object-contain hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="eyebrow text-[11px] tracking-[0.25em]">EST. 2005</div>
-                <div className="mt-2 font-serif text-2xl text-cocoa">Nawander Group</div>
-                <p className="text-sm text-muted-foreground mt-1">Pune · Latur</p>
-              </div>
-            </div>
-
-            <div className="mt-10 flex justify-center">
-              <Link to="/about" className="btn-outline inline-flex px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-sans">
-                Learn About Us
-              </Link>
-            </div>
+          <div className="pt-4 flex justify-start">
+            <Link to="/about" className="btn-outline inline-flex px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-sans">
+              Learn About Us
+            </Link>
           </div>
         </div>
       </div>
