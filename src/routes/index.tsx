@@ -139,7 +139,7 @@ function Home() {
       </section>
 
       {/* PROMISES — 04 */}
-      <section id="promises" className="section-y bg-cream relative overflow-hidden">
+      <section id="promises" className="py-20 md:py-32 bg-cream relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-[0.04]" />
         <div className="container-x relative">
           <div className="max-w-2xl">
@@ -207,7 +207,7 @@ function AboutSplit() {
   return (
     <section
       ref={ref}
-      className={`relative pt-12 md:pt-16 pb-0 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      className={`relative pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       {/* Content block with centered background watermark */}
       <div className="relative">
