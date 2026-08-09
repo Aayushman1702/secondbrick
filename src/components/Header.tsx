@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -23,12 +23,13 @@ const nav = [
       { label: "Upcoming Projects", to: "/portfolio", hash: "upcoming" },
     ],
   },
- { label: "Insights", to: "/insights" },
+  { label: "Insights", to: "/insights" },
 ];
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -37,12 +38,15 @@ export function Header() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  const isHomePage = location.pathname === "/";
+  const isTransparent = isHomePage && !scrolled && !open;
+
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        scrolled || open
-          ? "bg-cream/95 backdrop-blur-md border-b border-border shadow-[0_1px_20px_-10px_rgba(61,40,34,0.25)]"
-          : "bg-transparent"
+        isTransparent
+          ? "bg-transparent border-b border-transparent shadow-none"
+          : "bg-[#FBF1E9]/95 backdrop-blur-md border-b border-border shadow-[0_4px_20px_-10px_rgba(61,40,34,0.15)]"
       }`}
     >
       <div className="container-x flex items-center justify-between h-20">
@@ -56,13 +60,21 @@ export function Header() {
               <Link
                 to={item.to}
                 activeOptions={item.to === "/" ? { exact: true } : undefined}
-                className="relative flex items-center gap-1 text-[13px] tracking-[0.14em] uppercase text-cocoa hover:text-brick transition-colors py-2 font-medium"
+                className={`relative flex items-center gap-1 text-[13px] tracking-[0.14em] uppercase transition-colors py-2 font-medium ${
+                  isTransparent
+                    ? "text-cream/90 hover:text-cream drop-shadow-xs"
+                    : "text-cocoa hover:text-brick"
+                }`}
                 activeProps={{
-                  className: "text-brick font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-brick after:rounded-full",
+                  className: `${
+                    isTransparent ? "text-cream" : "text-brick"
+                  } font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-brick after:rounded-full`,
                 }}
               >
                 {item.label}
-                {item.children && <ChevronDown className="w-3.5 h-3.5 opacity-60" />}
+                {item.children && (
+                  <ChevronDown className={`w-3.5 h-3.5 ${isTransparent ? "opacity-90 text-cream" : "opacity-60 text-cocoa"}`} />
+                )}
               </Link>
               {item.children && (
                 <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300">
@@ -92,7 +104,7 @@ export function Header() {
         </div>
 
         <button
-          className="lg:hidden text-cocoa p-2"
+          className={`lg:hidden p-2 transition-colors ${isTransparent ? "text-cream" : "text-cocoa"}`}
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >

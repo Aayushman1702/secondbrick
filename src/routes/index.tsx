@@ -114,7 +114,7 @@ function Home() {
 
 
       {/* FEATURED PROJECTS — horizontal luxury gallery */}
-      <section className="pt-12 md:pt-16 pb-24 md:pb-36 bg-cream">
+      <section className="py-20 md:py-28 bg-cream">
         <div className="container-x mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -131,7 +131,7 @@ function Home() {
           </p>
         </div>
         <HorizontalProjects />
-        <div className="container-x mt-16 text-center">
+        <div className="container-x mt-12 md:mt-16 text-center">
           <MagneticButton as="a" href="/portfolio" className="btn-outline">
             View Full Portfolio
           </MagneticButton>
@@ -139,7 +139,7 @@ function Home() {
       </section>
 
       {/* PROMISES — 04 */}
-      <section id="promises" className="py-20 md:py-32 bg-cream relative overflow-hidden">
+      <section id="promises" className="py-20 md:py-28 bg-cream relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-[0.04]" />
         <div className="container-x relative">
           <div className="max-w-2xl">
@@ -155,11 +155,14 @@ function Home() {
         <div className="container-x relative mt-14">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
             {promises.map(({ title, description, icon: Icon }, index) => (
-              <article key={`${title}-${index}`} style={{ backgroundColor: "#FBF1E9" }} className="min-h-[310px] rounded-[2rem] border border-cocoa/5 p-7 text-center shadow-none flex flex-col justify-between">
+              <article
+                key={`${title}-${index}`}
+                className="min-h-[310px] rounded-none border border-cocoa/10 bg-[#F8EDE3] p-7 text-center shadow-sm flex flex-col justify-between transition-all duration-300 ease-out hover:-translate-y-2.5 hover:shadow-[0_20px_40px_-15px_rgba(61,40,34,0.15)] hover:border-brick/30 hover:bg-[#F2E3D4] group cursor-pointer"
+              >
                 <div>
-                  <Icon className="mx-auto h-14 w-14 text-brick" strokeWidth={1.45} />
-                  <h3 className="mt-6 font-serif text-[1.4rem] leading-[1.08] text-cocoa">{title}</h3>
-                  <div className="mx-auto mt-5 h-0.5 w-9 bg-brick/80" />
+                  <Icon className="mx-auto h-14 w-14 text-brick transition-transform duration-300 group-hover:scale-110" strokeWidth={1.45} />
+                  <h3 className="mt-6 font-serif text-[1.4rem] leading-[1.08] text-cocoa group-hover:text-brick transition-colors">{title}</h3>
+                  <div className="mx-auto mt-5 h-0.5 w-9 bg-brick/80 transition-all duration-300 group-hover:w-14 group-hover:bg-brick" />
                   <p className="mt-5 text-sm leading-[1.4] text-cocoa/75">{description}</p>
                 </div>
               </article>
@@ -169,7 +172,7 @@ function Home() {
       </section>
 
       {/* CTA */}
-      <section className="relative py-16 md:py-24 bg-cocoa text-cream overflow-hidden grain">
+      <section className="relative py-24 md:py-32 bg-cocoa text-cream overflow-hidden grain">
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="font-serif text-[28vw] md:text-[16vw] text-cream/[0.03] leading-none select-none">
@@ -207,7 +210,7 @@ function AboutSplit() {
   return (
     <section
       ref={ref}
-      className={`relative pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      className={`relative pt-20 md:pt-28 pb-0 overflow-hidden transition-all duration-1000 ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
     >
       {/* Content block with centered background watermark */}
       <div className="relative">
@@ -288,7 +291,7 @@ function AboutSplit() {
       </div>
 
       {/* STATS BANNER BAR */}
-      <div className="mt-12 md:mt-16 bg-[#3D2822] text-[#FBF1E9] py-10 md:py-14 border-y border-[#6D0D12]/20">
+      <div className="mt-20 md:mt-24 bg-[#3D2822] text-[#FBF1E9] py-14 md:py-18 border-y border-[#6D0D12]/20">
         <div className="container-x">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-[#FBF1E9]/15">
             <div className="flex flex-col items-center justify-center p-2">

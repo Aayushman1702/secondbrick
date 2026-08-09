@@ -5,15 +5,6 @@ interface ScrollInterestModalProps {
   scrollThreshold?: number; // scroll distance in px before opening modal
 }
 
-const PROJECTS = [
-  "Alibaug Coastal Villa",
-  "Second Brick Estate",
-  "Palm Beach Enclave",
-  "Sunset Bay Alibaug",
-  "Nawander Heights",
-  "PRO-DEV Luxury Residence",
-  "Other Project",
-];
 
 const COUNTRY_CODES = [
   { code: "+91", flag: "🇮🇳", country: "India" },
@@ -29,8 +20,6 @@ export function ScrollInterestModal({ scrollThreshold = 350 }: ScrollInterestMod
   const [submitted, setSubmitted] = useState(false);
 
   // Form State
-  const [selectedProject, setSelectedProject] = useState("");
-  const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [name, setName] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [countryFlag, setCountryFlag] = useState("🇮🇳");
@@ -121,40 +110,6 @@ export function ScrollInterestModal({ scrollThreshold = 350 }: ScrollInterestMod
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Project Dropdown */}
-              <div className="relative">
-                <label className="block text-[11px] uppercase tracking-wider text-cream/80 font-medium mb-1">
-                  Project
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
-                  className="w-full flex items-center justify-between py-2 border-b border-cream/25 focus:border-brick text-left text-sm text-cream bg-transparent transition-colors"
-                >
-                  <span className={selectedProject ? "text-cream" : "text-cream/40"}>
-                    {selectedProject || "Select a project"}
-                  </span>
-                  <ChevronDown className={`w-4 h-4 text-cream/60 transition-transform ${isProjectDropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-
-                {isProjectDropdownOpen && (
-                  <div className="absolute z-30 top-full left-0 right-0 mt-1 bg-[#37231E] border border-cream/20 rounded-md shadow-2xl py-1 max-h-48 overflow-y-auto">
-                    {PROJECTS.map((proj) => (
-                      <button
-                        key={proj}
-                        type="button"
-                        onClick={() => {
-                          setSelectedProject(proj);
-                          setIsProjectDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-xs sm:text-sm text-cream/80 hover:text-cream hover:bg-brick/40 transition-colors"
-                      >
-                        {proj}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               {/* Name */}
               <div>

@@ -44,7 +44,8 @@ export function HorizontalProjects() {
           return (
             <Link
               key={p.id || i}
-              to="/portfolio"
+              to="/project/$id"
+              params={{ id: p.id }}
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
               className={`relative shrink-0 snap-start overflow-hidden group transition-[width,transform] duration-700 ease-[cubic-bezier(.65,.05,.36,1)]

@@ -57,7 +57,7 @@ function About() {
   return (
     <>
       {/* HERO — editorial cinematic */}
-      <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden bg-cream">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-cream">
         <img
           src={heroAbout}
           alt="Interior with arched windows"
@@ -95,7 +95,7 @@ function About() {
       </section>
 
       {/* HISTORY — two founding companies */}
-      <section id="history" className="section-y bg-secondary/40 relative overflow-hidden">
+      <section id="history" className="py-20 md:py-28 bg-secondary/40 relative overflow-hidden">
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 mb-14 lg:items-end">
             <div className="lg:col-span-5">
@@ -151,7 +151,7 @@ function About() {
       </section>
 
       {/* FOUNDATIONS — feature cards */}
-      <section className="pt-16 pb-16 md:pt-24 md:pb-20 bg-cream text-cocoa relative overflow-hidden">
+      <section className="py-20 md:py-28 bg-cream text-cocoa relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-[0.04]" />
         <div className="container-x relative">
           <div className="max-w-xl">
@@ -174,7 +174,7 @@ function About() {
       </section>
 
       {/* LEADERSHIP — magazine profiles */}
-      <section className="pt-12 pb-20 md:pt-16 md:pb-28">
+      <section className="py-20 md:py-28">
         <div className="container-x">
           <div className="grid lg:grid-cols-12 gap-10 mb-20">
             <div className="lg:col-span-5">
@@ -192,30 +192,28 @@ function About() {
             </p>
           </div>
 
-          <div className="space-y-24">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-14">
             {leaders.map((l, i) => (
-              <article key={l.name} className={`grid md:grid-cols-12 gap-10 md:gap-16 items-center ${i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""}`}>
-                <div className="md:col-span-5">
-                  <div className="relative aspect-[4/5] overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-brick via-brick to-cocoa flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
-                      <span className="font-serif text-[10rem] text-cream/95 leading-none">{l.initials}</span>
-                    </div>
-                    <div className="absolute inset-3 border border-cream/30 pointer-events-none" />
-                    <div className="absolute top-4 left-4 text-[10px] tracking-[0.3em] uppercase text-cream/80">
-                      Fig. 0{i + 1}
-                    </div>
-                    <div className="absolute bottom-4 right-4 v-text text-cream/70">{l.group}</div>
+              <article key={l.name} className="flex flex-col group">
+                <div className="relative aspect-[4/3] max-w-md w-full overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-brick via-brick to-cocoa flex items-center justify-center transition-transform duration-700 group-hover:scale-105">
+                    <span className="font-serif text-[5rem] sm:text-[6rem] text-cream/95 leading-none">{l.initials}</span>
                   </div>
+                  <div className="absolute inset-3 border border-cream/30 pointer-events-none" />
+                  <div className="absolute top-4 left-4 text-[10px] tracking-[0.3em] uppercase text-cream/80">
+                    Fig. 0{i + 1}
+                  </div>
+                  <div className="absolute bottom-4 right-4 v-text text-cream/70">{l.group}</div>
                 </div>
-                <div className="md:col-span-7 md:pl-6">
+                <div className="mt-8">
                   <div className="eyebrow">{l.group}</div>
-                  <h3 className="mt-3 font-serif" style={{ fontSize: "clamp(2rem, 3.5vw, 2.8rem)", lineHeight: 1.05 }}>
+                  <h3 className="mt-2 font-serif text-3xl sm:text-4xl text-cocoa leading-tight">
                     {l.name}
                   </h3>
-                  <div className="mt-2 text-cocoa/60 italic font-serif text-lg">{l.role}</div>
-                  <div className="mt-6 w-16 h-px bg-brick" />
-                  <p className="mt-6 text-lg leading-relaxed text-muted-foreground max-w-xl">{l.bio}</p>
-                  <div className="mt-8 font-serif italic text-2xl text-brick">— {l.initials}.</div>
+                  <div className="mt-1 text-cocoa/60 italic font-serif text-lg">{l.role}</div>
+                  <div className="mt-5 w-14 h-px bg-brick" />
+                  <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">{l.bio}</p>
+                  <div className="mt-6 font-serif italic text-2xl text-brick">— {l.initials}.</div>
                 </div>
               </article>
             ))}
@@ -224,40 +222,44 @@ function About() {
       </section>
 
       {/* PRESENCE — 05 */}
-      <section id="presence" className="pt-14 md:pt-20 pb-10 md:pb-14 bg-cocoa text-cream relative overflow-hidden">
+      <section id="presence" className="py-20 md:py-28 bg-cocoa text-cream relative overflow-hidden">
         <div className="container-x relative">
-          <div className="mb-12 md:mb-14">
-            <div className="text-[10px] tracking-[0.35em] uppercase text-cream/80 mb-4">— 06 / Presence</div>
-            <h2 className="font-serif text-cream" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)" }}>
-              Rooted in cities that
-              <br />
-              <em className="italic text-cream">shape India</em>'s real estate story.
-            </h2>
-          </div>
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+            {/* Left Column: Heading + City List */}
+            <div className="lg:col-span-5 space-y-6">
+              <div>
+                <div className="text-[10px] tracking-[0.35em] uppercase text-cream/80 mb-3">— 05 / Presence</div>
+                <h2 className="font-serif text-cream" style={{ fontSize: "clamp(2rem, 4.2vw, 3.2rem)", lineHeight: 1.08 }}>
+                  Rooted in cities that
+                  <br />
+                  <em className="italic text-cream">shape India</em>'s real estate story.
+                </h2>
+              </div>
 
-          <div className="grid lg:grid-cols-12 gap-14 items-center">
-            <div className="lg:col-span-5 space-y-1">
-              {cities.map((city, i) => (
-                <button
-                  key={city.c}
-                  onMouseEnter={() => setActiveCity(i)}
-                  onClick={() => setActiveCity(i)}
-                  className={`group w-full text-left border-b py-5 flex items-baseline gap-6 transition-all ${activeCity === i ? "border-cream/60" : "border-cream/15"}`}
-                >
-                  <span className={`text-[10px] tracking-[0.3em] uppercase ${activeCity === i ? "text-cream font-bold" : "text-cream/40"}`}>{city.n}</span>
-                  <div className="flex-1">
-                    <div className={`font-serif text-4xl transition-colors ${activeCity === i ? "text-cream italic" : "text-cream/70"}`}>{city.c}</div>
-                    <div className="text-sm text-cream/65 mt-1">{city.focus}</div>
-                  </div>
-                </button>
-              ))}
+              <div className="space-y-1 pt-2">
+                {cities.map((city, i) => (
+                  <button
+                    key={city.c}
+                    onMouseEnter={() => setActiveCity(i)}
+                    onClick={() => setActiveCity(i)}
+                    className={`group w-full text-left border-b py-3.5 flex items-baseline gap-5 transition-all ${activeCity === i ? "border-cream/60" : "border-cream/15"}`}
+                  >
+                    <span className={`text-[10px] tracking-[0.3em] uppercase ${activeCity === i ? "text-cream font-bold" : "text-cream/40"}`}>{city.n}</span>
+                    <div className="flex-1">
+                      <div className={`font-serif text-2xl sm:text-3xl transition-colors ${activeCity === i ? "text-cream italic" : "text-cream/70"}`}>{city.c}</div>
+                      <div className="text-xs sm:text-sm text-cream/65 mt-0.5">{city.focus}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="lg:col-span-7 relative aspect-[4/3] md:aspect-[16/11] lg:w-[calc(100%+3rem)] overflow-hidden lg:translate-x-3 group">
+            {/* Right Column: Map in the drawn circle */}
+            <div className="lg:col-span-7 relative w-full flex items-center justify-center lg:justify-end lg:translate-x-4 pt-2 group">
               <img
                 src={presenceMap}
                 alt="3D map showing Second Brick's location presence across Mumbai, Pune, Latur and Goa"
-                className="absolute inset-0 h-full w-full object-contain p-2 drop-shadow-[0_25px_35px_rgba(0,0,0,0.6)] transition-transform duration-700 group-hover:scale-105"
+                className="w-full max-w-[520px] h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.65)] transition-transform duration-700 group-hover:scale-105"
               />
               <svg viewBox="0 0 400 500" className="hidden absolute inset-0 w-full h-full text-cream/25">
                 {/* Stylized Maharashtra outline */}

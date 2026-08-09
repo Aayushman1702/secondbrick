@@ -18,6 +18,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminUploadProjectRouteImport } from './routes/admin/upload-project'
+import { Route as ProjectIdRouteImport } from './routes/project.$id'
 import { Route as AdminUploadInsightsArticleLinkRouteImport } from './routes/admin/upload-insights.article-link'
 import { Route as AdminUploadInsightsBlogRouteImport } from './routes/admin/upload-insights.blog'
 
@@ -66,6 +67,11 @@ const AdminUploadProjectRoute = AdminUploadProjectRouteImport.update({
   path: '/admin/upload-project',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectIdRoute = ProjectIdRouteImport.update({
+  id: '/project/$id',
+  path: '/project/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUploadInsightsArticleLinkRoute =
   AdminUploadInsightsArticleLinkRouteImport.update({
     id: '/admin/upload-insights/article-link',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/project/$id': typeof ProjectIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
   '/admin/upload-insights/blog': typeof AdminUploadInsightsBlogRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/project/$id': typeof ProjectIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
   '/admin/upload-insights/blog': typeof AdminUploadInsightsBlogRoute
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/project/$id': typeof ProjectIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
   '/admin/upload-insights/blog': typeof AdminUploadInsightsBlogRoute
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/settings'
     | '/admin/upload-project'
+    | '/project/$id'
     | '/admin/'
     | '/admin/upload-insights/article-link'
     | '/admin/upload-insights/blog'
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/settings'
     | '/admin/upload-project'
+    | '/project/$id'
     | '/admin'
     | '/admin/upload-insights/article-link'
     | '/admin/upload-insights/blog'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/settings'
     | '/admin/upload-project'
+    | '/project/$id'
     | '/admin/'
     | '/admin/upload-insights/article-link'
     | '/admin/upload-insights/blog'
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUploadProjectRoute: typeof AdminUploadProjectRoute
+  ProjectIdRoute: typeof ProjectIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminUploadInsightsArticleLinkRoute: typeof AdminUploadInsightsArticleLinkRoute
   AdminUploadInsightsBlogRoute: typeof AdminUploadInsightsBlogRoute
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUploadProjectRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project/$id': {
+      id: '/project/$id'
+      path: '/project/$id'
+      fullPath: '/project/$id'
+      preLoaderRoute: typeof ProjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/upload-insights/article-link': {
       id: '/admin/upload-insights/article-link'
       path: '/admin/upload-insights/article-link'
@@ -265,6 +285,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUploadProjectRoute: AdminUploadProjectRoute,
+  ProjectIdRoute: ProjectIdRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminUploadInsightsArticleLinkRoute: AdminUploadInsightsArticleLinkRoute,
   AdminUploadInsightsBlogRoute: AdminUploadInsightsBlogRoute,

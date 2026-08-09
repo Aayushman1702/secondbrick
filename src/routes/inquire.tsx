@@ -162,24 +162,6 @@ function Inquire() {
           </div>
         </div>
       </section>
-
-      {/* MAP */}
-      <section className="pb-24">
-        <div className="container-x">
-          <div className="aspect-[16/8] border border-border overflow-hidden bg-secondary">
-            <iframe
-              title="Second Brick — Mumbai Office"
-              src="https://www.google.com/maps?q=Vile+Parle+East+Mumbai+400057&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      </section>
     </>
   );
 }
