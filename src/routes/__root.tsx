@@ -14,7 +14,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { PageLoader } from "@/components/PageLoader";
 import { MouseGlow } from "@/components/MouseGlow";
 
 function NotFoundComponent() {
@@ -120,7 +119,6 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PageLoader />
       <MouseGlow />
       <div className="min-h-screen flex flex-col bg-background">
         <Header />
