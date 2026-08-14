@@ -19,8 +19,10 @@ import {
   FileText,
   Eye,
   Share2,
+  Layers,
+  ShieldCheck,
 } from "lucide-react";
-import { saveProject, updateProject, getProjectById } from "@/lib/contentStore";
+import { saveProject, updateProject, getProjectById, ParameterCard, HeroSpecCard } from "@/lib/contentStore";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/admin/upload-project")({
@@ -47,6 +49,14 @@ function UploadProject() {
   const [totalUnits, setTotalUnits] = useState("48 Exclusive Units");
   const [architect, setArchitect] = useState("PRO-DEV Architectural Studio");
 
+  // Top Hero 4 Quick Spec Cards (Fully Editable)
+  const [heroSpecCards, setHeroSpecCards] = useState<HeroSpecCard[]>([
+    { label: "Total Area", value: "2,400 sq.ft" },
+    { label: "Timeline / Possession", value: "December 2027" },
+    { label: "Configuration / Typology", value: "48 Exclusive Units" },
+    { label: "Price / Valuation", value: "₹4.50 Cr - ₹8.20 Cr" },
+  ]);
+
   // Step 2: Images & Overlay Text Options
   const [featuredImage, setFeaturedImage] = useState<string>("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80");
   const [imageOverlayTitle, setImageOverlayTitle] = useState("Featured Developments");
@@ -64,6 +74,43 @@ function UploadProject() {
   const [googleMapsLink, setGoogleMapsLink] = useState("https://maps.google.com/?q=Alibaug");
   const [virtualTourLink, setVirtualTourLink] = useState("");
   const [videoLink, setVideoLink] = useState("");
+
+  // Executive Parameters & Key Metrics Cards States (Fully Editable Cards)
+  const [parametersEyebrow, setParametersEyebrow] = useState("EXECUTIVE BRIEF");
+  const [parametersTitle, setParametersTitle] = useState("Project Parameters & Key Metrics");
+  const [parametersSubtext, setParametersSubtext] = useState("Detailed breakdown of zoning, built area, regulatory compliance, and architectural leadership.");
+  const [parameterCards, setParameterCards] = useState<ParameterCard[]>([
+    {
+      id: "card-1",
+      title: "Scale & Configuration",
+      items: [
+        { label: "Built-up Footprint", value: "2,400 sq.ft" },
+        { label: "Typology", value: "Residential" },
+        { label: "Total Inventory", value: "48 Exclusive Units" },
+        { label: "Project Status", value: "Ongoing" },
+      ],
+    },
+    {
+      id: "card-2",
+      title: "Governance & Delivery",
+      items: [
+        { label: "RERA Registration", value: "P51800049281" },
+        { label: "Delivery Partner", value: "PRO-DEV × Nawander Group" },
+        { label: "Design Architect", value: "PRO-DEV Architectural Studio" },
+        { label: "Target Handover", value: "December 2027" },
+      ],
+    },
+    {
+      id: "card-3",
+      title: "Strategic Micro-Market",
+      items: [
+        { label: "Location", value: "Alibaug, Coastal Highway" },
+        { label: "Valuation Range", value: "₹4.50 Cr - ₹8.20 Cr" },
+        { label: "Investment Class", value: "Prime Grade-A Capital Growth" },
+        { label: "GPS Navigation", value: "Google Maps" },
+      ],
+    },
+  ]);
 
   // Step 4: USPs, Standard Note & Location Intelligence States
   const [uspTitle, setUspTitle] = useState("Curated USPs & Architectural Amenities");
@@ -127,6 +174,26 @@ function UploadProject() {
           setGoogleMapsLink(found.googleMapsLink || "");
           setVirtualTourLink(found.virtualTourLink || "");
           setVideoLink(found.videoLink || "");
+          if (found.heroSpecCards && Array.isArray(found.heroSpecCards) && found.heroSpecCards.length > 0) {
+            setHeroSpecCards(
+              found.heroSpecCards.map((c) => ({
+                label: c.label || "Specification",
+                value: c.value || "",
+              }))
+            );
+          }
+          if (found.parametersEyebrow) setParametersEyebrow(found.parametersEyebrow);
+          if (found.parametersTitle) setParametersTitle(found.parametersTitle);
+          if (found.parametersSubtext) setParametersSubtext(found.parametersSubtext);
+          if (found.parameterCards && Array.isArray(found.parameterCards) && found.parameterCards.length > 0) {
+            setParameterCards(
+              found.parameterCards.map((c, i) => ({
+                id: c.id || `card-${i}`,
+                title: c.title || `Card ${i + 1}`,
+                items: Array.isArray(c.items) ? c.items.map((it) => ({ label: it.label || "", value: it.value || "" })) : [],
+              }))
+            );
+          }
           if (found.usps && found.usps.length > 0) {
             setUsps(found.usps);
           }
@@ -178,6 +245,122 @@ function UploadProject() {
     setConnectivityCards(connectivityCards.filter((_, i) => i !== index));
   };
 
+  // Parameter Cards Handlers
+  const handleAddParameterCard = () => {
+    setParameterCards([
+      ...parameterCards,
+      {
+        id: `card-${Date.now()}`,
+        title: `Card ${parameterCards.length + 1}`,
+        items: [
+          { label: "Specification Field", value: "Details" },
+          { label: "Secondary Parameter", value: "Value" },
+        ],
+      },
+    ]);
+  };
+
+  const handleRemoveParameterCard = (cardIdx: number) => {
+    setParameterCards(parameterCards.filter((_, idx) => idx !== cardIdx));
+  };
+
+  const handleCardTitleChange = (cardIdx: number, newTitle: string) => {
+    const updated = [...parameterCards];
+    if (updated[cardIdx]) {
+      updated[cardIdx] = { ...updated[cardIdx], title: newTitle };
+      setParameterCards(updated);
+    }
+  };
+
+  const handleAddCardItem = (cardIdx: number) => {
+    const updated = [...parameterCards];
+    if (updated[cardIdx]) {
+      const items = updated[cardIdx].items ? [...updated[cardIdx].items] : [];
+      updated[cardIdx] = {
+        ...updated[cardIdx],
+        items: [...items, { label: "Field Name", value: "Value" }],
+      };
+      setParameterCards(updated);
+    }
+  };
+
+  const handleRemoveCardItem = (cardIdx: number, itemIdx: number) => {
+    const updated = [...parameterCards];
+    if (updated[cardIdx]) {
+      const items = (updated[cardIdx].items || []).filter((_, i) => i !== itemIdx);
+      updated[cardIdx] = {
+        ...updated[cardIdx],
+        items,
+      };
+      setParameterCards(updated);
+    }
+  };
+
+  const handleCardItemChange = (cardIdx: number, itemIdx: number, field: "label" | "value", val: string) => {
+    const updated = [...parameterCards];
+    if (updated[cardIdx]) {
+      const updatedItems = [...(updated[cardIdx].items || [])];
+      if (updatedItems[itemIdx]) {
+        updatedItems[itemIdx] = { ...updatedItems[itemIdx], [field]: val };
+        updated[cardIdx] = { ...updated[cardIdx], items: updatedItems };
+        setParameterCards(updated);
+      }
+    }
+  };
+
+  // Hero Quick Spec 4 Cards Handlers
+  const handleHeroSpecChange = (index: number, field: "label" | "value", val: string) => {
+    const updated = [...heroSpecCards];
+    if (updated[index]) {
+      updated[index] = { ...updated[index], [field]: val };
+      setHeroSpecCards(updated);
+    }
+  };
+
+  const handleSyncHeroSpecs = () => {
+    setHeroSpecCards([
+      { label: "Total Area", value: sqft ? `${sqft} sq.ft` : "2,400 sq.ft" },
+      { label: "Timeline / Possession", value: possessionDate || date || "Ready" },
+      { label: "Configuration / Typology", value: totalUnits || type || "Residential" },
+      { label: "Price / Valuation", value: priceRange || "On Request" },
+    ]);
+  };
+
+  const handleSyncCardsWithBasicInfo = () => {
+    setParameterCards([
+      {
+        id: "card-1",
+        title: "Scale & Configuration",
+        items: [
+          { label: "Built-up Footprint", value: sqft ? `${sqft} sq.ft` : "2,400 sq.ft" },
+          { label: "Typology", value: type || "Residential" },
+          { label: "Total Inventory", value: totalUnits || "48 Exclusive Units" },
+          { label: "Project Status", value: status || "Ongoing" },
+        ],
+      },
+      {
+        id: "card-2",
+        title: "Governance & Delivery",
+        items: [
+          { label: "RERA Registration", value: reraNumber || "Approved / Compliant" },
+          { label: "Delivery Partner", value: "PRO-DEV × Nawander Group" },
+          { label: "Design Architect", value: architect || "PRO-DEV Architectural Studio" },
+          { label: "Target Handover", value: possessionDate || date || "Ready" },
+        ],
+      },
+      {
+        id: "card-3",
+        title: "Strategic Micro-Market",
+        items: [
+          { label: "Location", value: location || "Maharashtra" },
+          { label: "Valuation Range", value: priceRange || "Available on Application" },
+          { label: "Investment Class", value: "Prime Grade-A Capital Growth" },
+          { label: "GPS Navigation", value: googleMapsLink ? "Google Maps" : "Prime Corridor" },
+        ],
+      },
+    ]);
+  };
+
   const handleAddGalleryImage = () => {
     const placeholder = `https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80`;
     setGalleryImages([...galleryImages, placeholder]);
@@ -209,6 +392,11 @@ function UploadProject() {
       googleMapsLink,
       virtualTourLink,
       videoLink,
+      heroSpecCards,
+      parametersEyebrow,
+      parametersTitle,
+      parametersSubtext,
+      parameterCards,
       usps,
       uspTitle,
       uspSubtext,
@@ -279,7 +467,7 @@ function UploadProject() {
               { n: 1, label: "Basic Information" },
               { n: 2, label: "Images" },
               { n: 3, label: "Links" },
-              { n: 4, label: "USPs (Amenities)" },
+              { n: 4, label: "Cards & USPs" },
               { n: 5, label: "Preview & Publish" },
             ].map(({ n, label }) => {
               const isCompleted = step > n;
@@ -452,6 +640,58 @@ function UploadProject() {
                     placeholder="e.g. 24 Exclusive Villas"
                     className="w-full bg-slate-50/50 border border-slate-300 rounded-lg px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white"
                   />
+                </div>
+              </div>
+
+              {/* Hero Header 4 Quick Spec Cards (Top 4 Highlight Cards in Hero Banner) */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4 pt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <Layers className="w-4 h-4 text-[#6D0D12]" />
+                      <span>Hero Header 4 Quick Spec Cards (Editable)</span>
+                    </h3>
+                    <p className="text-slate-500 text-xs mt-0.5">
+                      These 4 cards appear directly in the project hero banner under the title. Rename the labels and change values as desired.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSyncHeroSpecs}
+                    className="text-[11px] font-medium text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  >
+                    Sync with Inputs Above
+                  </button>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {heroSpecCards.map((spec, idx) => (
+                    <div key={idx} className="bg-white border-2 border-slate-200 hover:border-[#6D0D12]/40 p-3.5 rounded-xl space-y-2 shadow-2xs">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-[#6D0D12]/10 text-[#6D0D12] px-2 py-0.5 rounded">
+                        Hero Card {idx + 1}
+                      </span>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-500 mb-0.5">Card Label</label>
+                        <input
+                          type="text"
+                          value={spec.label || ""}
+                          onChange={(e) => handleHeroSpecChange(idx, "label", e.target.value)}
+                          placeholder="e.g. Total Area"
+                          className="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs text-slate-800 font-semibold focus:outline-none focus:border-blue-600 focus:bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-500 mb-0.5">Card Value</label>
+                        <input
+                          type="text"
+                          value={spec.value || ""}
+                          onChange={(e) => handleHeroSpecChange(idx, "value", e.target.value)}
+                          placeholder="e.g. 2,400 sq.ft"
+                          className="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs text-slate-900 font-bold focus:outline-none focus:border-blue-600 focus:bg-white"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -674,9 +914,217 @@ function UploadProject() {
             </div>
           )}
 
-          {/* STEP 4: USPS & AMENITIES */}
+          {/* STEP 4: CARDS, PARAMETERS & USPS */}
           {step === 4 && (
             <div className="space-y-8">
+              {/* Part 0A: Hero Header 4 Quick Spec Cards (Top 4 Highlight Cards in Hero Banner) */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <Layers className="w-4 h-4 text-[#6D0D12]" />
+                      <span>Top Hero Header 4 Quick Spec Cards (Hero Highlights)</span>
+                    </h2>
+                    <p className="text-slate-500 text-xs mt-0.5">
+                      These 4 cards appear directly in the project hero banner under the title. Rename the labels and change values freely.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSyncHeroSpecs}
+                    className="text-[11px] font-medium text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  >
+                    Auto-Sync with Basic Info
+                  </button>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {heroSpecCards.map((spec, idx) => (
+                    <div key={idx} className="bg-white border-2 border-slate-200 hover:border-[#6D0D12]/40 p-3.5 rounded-xl space-y-2 shadow-2xs">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-[#6D0D12]/10 text-[#6D0D12] px-2 py-0.5 rounded">
+                        Hero Card {idx + 1}
+                      </span>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-500 mb-0.5">Card Label</label>
+                        <input
+                          type="text"
+                          value={spec.label || ""}
+                          onChange={(e) => handleHeroSpecChange(idx, "label", e.target.value)}
+                          placeholder="e.g. Total Area"
+                          className="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs text-slate-800 font-semibold focus:outline-none focus:border-blue-600 focus:bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-500 mb-0.5">Card Value</label>
+                        <input
+                          type="text"
+                          value={spec.value || ""}
+                          onChange={(e) => handleHeroSpecChange(idx, "value", e.target.value)}
+                          placeholder="e.g. 2,400 sq.ft"
+                          className="w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-xs text-slate-900 font-bold focus:outline-none focus:border-blue-600 focus:bg-white"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Part 0B: Project Parameters & Key Metrics Cards (Fully Editable Cards & Content) */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                      <Layers className="w-4 h-4 text-[#6D0D12]" />
+                      <span>Project Parameters & Key Metrics Cards (Executive Brief Cards)</span>
+                    </h2>
+                    <p className="text-slate-500 text-xs mt-0.5">
+                      Rename card titles, customize what fields appear inside each card, or add brand new cards.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleSyncCardsWithBasicInfo}
+                      className="text-[11px] font-medium text-slate-600 bg-white hover:bg-slate-100 border border-slate-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                      title="Reset / Auto-fill cards with current basic information"
+                    >
+                      Auto-Fill with Basic Info
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleAddParameterCard}
+                      className="text-[11px] font-bold text-[#FBF1E9] bg-[#6D0D12] hover:bg-[#550a0e] px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add New Card</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Section Title & Subtitle */}
+                <div className="grid sm:grid-cols-3 gap-3 bg-white p-3.5 rounded-lg border border-slate-200">
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-600 mb-1">Section Eyebrow</label>
+                    <input
+                      type="text"
+                      value={parametersEyebrow}
+                      onChange={(e) => setParametersEyebrow(e.target.value)}
+                      placeholder="EXECUTIVE BRIEF"
+                      className="w-full bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-blue-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-600 mb-1">Section Heading</label>
+                    <input
+                      type="text"
+                      value={parametersTitle}
+                      onChange={(e) => setParametersTitle(e.target.value)}
+                      placeholder="Project Parameters & Key Metrics"
+                      className="w-full bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold text-slate-600 mb-1">Section Subtext</label>
+                    <input
+                      type="text"
+                      value={parametersSubtext}
+                      onChange={(e) => setParametersSubtext(e.target.value)}
+                      placeholder="Detailed breakdown of zoning, built area..."
+                      className="w-full bg-slate-50 border border-slate-200 rounded px-2.5 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-blue-600"
+                    />
+                  </div>
+                </div>
+
+                {/* Parameter Cards Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+                  {parameterCards.map((card, cardIdx) => (
+                    <div
+                      key={card.id || cardIdx}
+                      className="bg-white border-2 border-slate-200 hover:border-[#6D0D12]/40 rounded-xl p-4 space-y-3 shadow-xs transition-all relative flex flex-col justify-between"
+                    >
+                      <div className="space-y-3">
+                        {/* Card Header & Title Rename */}
+                        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                          <span className="text-[10px] font-bold tracking-wider uppercase bg-[#6D0D12]/10 text-[#6D0D12] px-2 py-0.5 rounded">
+                            Card {cardIdx + 1}
+                          </span>
+                          {parameterCards.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveParameterCard(cardIdx)}
+                              className="text-slate-400 hover:text-red-600 p-1 rounded transition-colors cursor-pointer"
+                              title="Delete this entire card"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">
+                            Card Title (Rename Card)
+                          </label>
+                          <input
+                            type="text"
+                            value={card.title}
+                            onChange={(e) => handleCardTitleChange(cardIdx, e.target.value)}
+                            placeholder="e.g. Scale & Configuration"
+                            className="w-full bg-slate-50 border border-slate-300 rounded px-2.5 py-1.5 text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white"
+                          />
+                        </div>
+
+                        {/* Fields inside the card */}
+                        <div className="space-y-2 pt-1">
+                          <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-bold">
+                            Card Content Fields ({(card.items || []).length})
+                          </label>
+                          <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                            {(card.items || []).map((item, itemIdx) => (
+                              <div key={itemIdx} className="flex items-center gap-1.5 bg-slate-50 p-2 rounded border border-slate-200 group">
+                                <div className="flex-1 space-y-1">
+                                  <input
+                                    type="text"
+                                    value={item.label || ""}
+                                    onChange={(e) => handleCardItemChange(cardIdx, itemIdx, "label", e.target.value)}
+                                    placeholder="Field Label (e.g. Built-up Footprint)"
+                                    className="w-full text-[11px] font-semibold text-slate-700 bg-white border border-slate-200 rounded px-1.5 py-0.5 focus:outline-none focus:border-blue-600"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={item.value || ""}
+                                    onChange={(e) => handleCardItemChange(cardIdx, itemIdx, "value", e.target.value)}
+                                    placeholder="Field Value (e.g. 2,400 sq.ft)"
+                                    className="w-full text-[11px] text-slate-900 bg-white border border-slate-200 rounded px-1.5 py-0.5 focus:outline-none focus:border-blue-600"
+                                  />
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveCardItem(cardIdx, itemIdx)}
+                                  className="text-slate-400 hover:text-red-600 p-1 opacity-60 group-hover:opacity-100 transition-all cursor-pointer"
+                                  title="Delete field"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Add field button inside card */}
+                      <button
+                        type="button"
+                        onClick={() => handleAddCardItem(cardIdx)}
+                        className="mt-3 w-full py-1.5 text-center text-[11px] font-semibold text-[#6D0D12] bg-[#6D0D12]/5 hover:bg-[#6D0D12]/10 border border-[#6D0D12]/20 rounded transition-colors inline-flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        <Plus className="w-3 h-3" />
+                        <span>Add Field to this Card</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Part 1: USPs & Architectural Amenities */}
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
@@ -922,22 +1370,20 @@ function UploadProject() {
 
                   <div className="md:col-span-7 space-y-3">
                     <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="bg-white p-2.5 border border-[#6D0D12]/10">
-                        <div className="text-[9px] uppercase text-slate-500 font-semibold">Total Area</div>
-                        <div className="font-serif font-bold text-[#3D2822] mt-0.5">{sqft} sq.ft</div>
-                      </div>
-                      <div className="bg-white p-2.5 border border-[#6D0D12]/10">
-                        <div className="text-[9px] uppercase text-slate-500 font-semibold">Timeline</div>
-                        <div className="font-serif font-bold text-[#3D2822] mt-0.5">{possessionDate || date}</div>
-                      </div>
-                      <div className="bg-white p-2.5 border border-[#6D0D12]/10">
-                        <div className="text-[9px] uppercase text-slate-500 font-semibold">Location</div>
-                        <div className="font-serif font-bold text-[#3D2822] mt-0.5">{location}</div>
-                      </div>
-                      <div className="bg-white p-2.5 border border-[#6D0D12]/10">
-                        <div className="text-[9px] uppercase text-slate-500 font-semibold">Price / Valuation</div>
-                        <div className="font-serif font-bold text-[#6D0D12] mt-0.5">{priceRange}</div>
-                      </div>
+                      {(heroSpecCards && heroSpecCards.length > 0
+                        ? heroSpecCards
+                        : [
+                            { label: "Total Area", value: `${sqft} sq.ft` },
+                            { label: "Timeline", value: possessionDate || date },
+                            { label: "Location", value: location },
+                            { label: "Price / Valuation", value: priceRange },
+                          ]
+                      ).map((c, idx) => (
+                        <div key={idx} className="bg-white p-2.5 border border-[#6D0D12]/10">
+                          <div className="text-[9px] uppercase text-slate-500 font-semibold">{c.label}</div>
+                          <div className="font-serif font-bold text-[#3D2822] mt-0.5">{c.value}</div>
+                        </div>
+                      ))}
                     </div>
 
                     <p className="text-xs text-[#3D2822]/80 leading-relaxed pt-1 line-clamp-3">
@@ -945,6 +1391,32 @@ function UploadProject() {
                     </p>
                   </div>
                 </div>
+
+                {/* Executive Parameters Cards Preview */}
+                {parameterCards && parameterCards.length > 0 && (
+                  <div className="pt-4 border-t border-[#6D0D12]/15 space-y-3">
+                    <div className="text-xs font-bold text-[#3D2822] uppercase tracking-wider font-serif">
+                      {parametersTitle || "Project Parameters & Key Metrics"}
+                    </div>
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      {parameterCards.map((card, i) => (
+                        <div key={i} className="bg-white border border-[#6D0D12]/15 p-3 space-y-2">
+                          <div className="text-[11px] font-bold text-[#6D0D12] uppercase tracking-wider font-serif">
+                            {card.title}
+                          </div>
+                          <ul className="text-[11px] space-y-1 text-[#3D2822]/80">
+                            {(card.items || []).map((it, idx) => (
+                              <li key={idx} className="flex justify-between border-b border-slate-100 pb-0.5">
+                                <span className="text-slate-500">{it.label}:</span>
+                                <span className="font-semibold text-[#3D2822] text-right ml-1">{it.value}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* USPs Preview */}
                 {usps.length > 0 && (

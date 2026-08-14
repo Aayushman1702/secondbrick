@@ -22,15 +22,13 @@ const leaders = [
   {
     name: "Namrata Malu",
     group: "PRO-DEV",
-    role: "Principal, Redevelopment",
     bio: "Brings nearly three decades of PRO-DEV's redevelopment experience — quality construction and dependable delivery across Mumbai and Goa.",
     initials: "NM",
   },
-  
+
   {
     name: "Nitinkumar Nawander",
     group: "Nawander Group",
-    role: "Execution Lead",
     bio: "Grounds Nawander Group's design ambitions in practical, on-the-ground construction execution across Pune and Latur.",
     initials: "NN",
   },
@@ -61,31 +59,31 @@ function About() {
         <img
           src={heroAbout}
           alt="Interior with arched windows"
-          className="absolute inset-0 w-full h-full object-cover opacity-100"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-cream via-cream/70 to-cream" />
-        <div className="absolute top-24 right-6 md:right-10 v-text text-brick">— Chapter One / About</div>
+        <div className="absolute inset-0 bg-gradient-to-b from-cream/50 via-cream/35 to-cream/75" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cream/80 via-cream/30 to-transparent" />
         <div className="container-x relative">
-          <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-6">— About / 001</div>
-         <h1
-  className="font-serif reveal-x max-w-5xl"
-  style={{
-    fontSize: "clamp(2.6rem, 5vw, 4.8rem)",
-    lineHeight: 0.92,
-    letterSpacing: "-0.03em",
-  }}
->
-  A partnership built
-  <br />
-  <em
-    className="italic text-brick"
-    style={{
-      fontSize: "0.96em",
-    }}
-  >
-    experience & excellence.
-  </em>
-</h1>
+          <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">01 / About</div>
+          <h1
+            className="font-serif reveal-x max-w-5xl"
+            style={{
+              fontSize: "clamp(2.6rem, 5vw, 4.8rem)",
+              lineHeight: 0.92,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            A partnership built
+            <br />
+            <em
+              className="italic text-brick"
+              style={{
+                fontSize: "0.96em",
+              }}
+            >
+              experience & excellence.
+            </em>
+          </h1>
           <p className="mt-10 text-lg leading-relaxed text-muted-foreground max-w-2xl">
             Second Brick combines the expertise of PRO-DEV and Nawander Group to deliver
             exceptional real estate experiences through innovation, integrity, and long-term
@@ -95,29 +93,20 @@ function About() {
       </section>
 
       {/* HISTORY — two founding companies */}
-      <section id="history" className="py-20 md:py-28 bg-secondary/40 relative overflow-hidden">
+      <section id="history" className="pt-16 md:pt-24 pb-6 md:pb-10 bg-cream relative overflow-hidden">
         <div className="container-x">
-          <div className="grid lg:grid-cols-12 gap-10 mb-14 lg:items-end">
-            <div className="lg:col-span-5">
-              <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">02 / Our History</div>
-              <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)", lineHeight: 1.05 }}>
-                Two histories.<br />One shared <em className="italic text-brick">direction</em>.
-              </h2>
-            </div>
-            <p className="lg:col-span-7 text-lg leading-relaxed text-muted-foreground lg:max-w-2xl lg:justify-self-end">
-              Second Brick brings together two distinct real estate legacies — each grounded in local knowledge, disciplined execution and a belief in building for the long term.
-            </p>
+          <div className="mb-12">
+            <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">02 / Our History</div>
+            <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.4rem)", lineHeight: 1.05 }}>
+              Two histories.<br />One shared <em className="italic text-brick">direction</em>.
+            </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
             <article className="group relative overflow-hidden bg-[#2D1E1A] p-8 md:p-10 text-[#FBF1E9] min-h-[320px] rounded-none shadow-lg border border-[#FBF1E9]/10">
               <div className="absolute top-0 right-0 h-32 w-32 border-l border-b border-[#FBF1E9]/15 rounded-bl-full transition-transform duration-500 group-hover:scale-125 pointer-events-none" />
               <div className="relative flex h-full flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.3em] uppercase text-[#FBF1E9]/90">
-                    <span>PRO-DEV</span>
-                    <span>EST. 1994</span>
-                  </div>
-                  <div className="mt-6 mb-4 h-14 flex items-center">
+                  <div className="mb-4 h-14 flex items-center">
                     <img src={prodevFull} alt="PRO-DEV" className="h-12 w-auto object-contain brightness-125 filter drop-shadow-[0_2px_10px_rgba(255,255,255,0.25)]" />
                   </div>
                   <h3 className="mt-4 font-serif text-3xl md:text-4xl text-[#FBF1E9] font-bold tracking-tight">A legacy of renewal.</h3>
@@ -132,11 +121,7 @@ function About() {
               <div className="absolute bottom-0 left-0 h-32 w-32 border-r border-t border-[#6D0D12]/15 rounded-tr-full transition-transform duration-500 group-hover:scale-125 pointer-events-none" />
               <div className="relative flex h-full flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between text-[11px] font-bold tracking-[0.3em] uppercase text-[#6D0D12]">
-                    <span>Nawander Group</span>
-                    <span>EST. 2005</span>
-                  </div>
-                  <div className="mt-6 mb-4 h-14 flex items-center">
+                  <div className="mb-4 h-14 flex items-center">
                     <img src={nawanderLogo} alt="Nawander logo" className="h-12 w-auto object-contain" />
                   </div>
                   <h3 className="mt-4 font-serif text-3xl md:text-4xl text-[#3D2822] font-bold tracking-tight">A vision for growth.</h3>
@@ -151,7 +136,7 @@ function About() {
       </section>
 
       {/* FOUNDATIONS — feature cards */}
-      <section className="py-20 md:py-28 bg-cream text-cocoa relative overflow-hidden">
+      <section className="pt-6 md:pt-10 pb-8 md:pb-12 bg-cream text-cocoa relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-[0.04]" />
         <div className="container-x relative">
           <div className="max-w-xl">
@@ -174,9 +159,9 @@ function About() {
       </section>
 
       {/* LEADERSHIP — magazine profiles */}
-      <section className="py-20 md:py-28">
+      <section className="pt-8 md:pt-12 pb-16 md:pb-24">
         <div className="container-x">
-          <div className="grid lg:grid-cols-12 gap-10 mb-20">
+          <div className="grid lg:grid-cols-12 gap-10 mb-12 md:mb-16">
             <div className="lg:col-span-5">
               <div className="text-[10px] tracking-[0.35em] uppercase text-brick mb-4">— 04 / Leadership</div>
               <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 4.5vw, 3.2rem)", lineHeight: 1.05 }}>
@@ -210,7 +195,6 @@ function About() {
                   <h3 className="mt-2 font-serif text-3xl sm:text-4xl text-cocoa leading-tight">
                     {l.name}
                   </h3>
-                  <div className="mt-1 text-cocoa/60 italic font-serif text-lg">{l.role}</div>
                   <div className="mt-5 w-14 h-px bg-brick" />
                   <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">{l.bio}</p>
                   <div className="mt-6 font-serif italic text-2xl text-brick">— {l.initials}.</div>
@@ -232,7 +216,7 @@ function About() {
                 <h2 className="font-serif text-cream" style={{ fontSize: "clamp(2rem, 4.2vw, 3.2rem)", lineHeight: 1.08 }}>
                   Rooted in cities that
                   <br />
-                  <em className="italic text-cream">shape India</em>'s real estate story.
+                  shape India's real estate story.
                 </h2>
               </div>
 
@@ -302,4 +286,3 @@ function About() {
     </>
   );
 }
- 

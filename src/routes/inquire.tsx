@@ -38,6 +38,8 @@ const offices = [
   },
 ];
 
+import { saveInquiry } from "@/lib/contentStore";
+
 function Inquire() {
   const [values, setValues] = useState({ name: "", phone: "", email: "", city: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -55,6 +57,14 @@ function Inquire() {
       return;
     }
     setErrors({});
+    saveInquiry({
+      name: values.name.trim(),
+      phone: values.phone.trim(),
+      email: values.email.trim(),
+      city: values.city.trim(),
+      source: "Contact Page (/inquire)",
+      message: `Inquiry from ${values.city.trim()}`,
+    });
     setSubmitted(true);
   };
 

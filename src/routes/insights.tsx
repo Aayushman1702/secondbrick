@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { getStoredBlogs } from "@/lib/contentStore";
@@ -182,9 +182,14 @@ function Insights() {
                     )}
                     <div className="flex items-center justify-between">
                       <div className="eyebrow">{p.cat}</div>
-                      {hasExternalLink && (
+                      {hasExternalLink ? (
                         <span className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase font-semibold text-brick">
-                          <span>Read Full Article</span>
+                          <span>External Article</span>
+                          <ArrowUpRight className="w-3 h-3" />
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase font-semibold text-brick">
+                          <span>Read More</span>
                           <ArrowUpRight className="w-3 h-3" />
                         </span>
                       )}
@@ -216,9 +221,14 @@ function Insights() {
               }
 
               return (
-                <article key={p.id || p.title} className="group cursor-pointer p-5 rounded-none bg-[#FBF1E9] border border-[#6D0D12]/15 hover:bg-[#F5E6D8] transition-all">
+                <Link
+                  key={p.id || p.title}
+                  to="/insights/$id"
+                  params={{ id: p.id }}
+                  className="group cursor-pointer block p-5 rounded-none bg-[#FBF1E9] border border-[#6D0D12]/15 hover:bg-[#F5E6D8] transition-all hover:shadow-sm"
+                >
                   {cardContent}
-                </article>
+                </Link>
               );
             })}
           </div>

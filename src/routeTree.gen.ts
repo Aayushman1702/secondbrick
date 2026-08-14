@@ -16,8 +16,10 @@ import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminUploadProjectRouteImport } from './routes/admin/upload-project'
+import { Route as InsightsIdRouteImport } from './routes/insights_.$id'
 import { Route as ProjectIdRouteImport } from './routes/project.$id'
 import { Route as AdminUploadInsightsArticleLinkRouteImport } from './routes/admin/upload-insights.article-link'
 import { Route as AdminUploadInsightsBlogRouteImport } from './routes/admin/upload-insights.blog'
@@ -57,6 +59,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLeadsRoute = AdminLeadsRouteImport.update({
+  id: '/admin/leads',
+  path: '/admin/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/admin/settings',
   path: '/admin/settings',
@@ -65,6 +72,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
 const AdminUploadProjectRoute = AdminUploadProjectRouteImport.update({
   id: '/admin/upload-project',
   path: '/admin/upload-project',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InsightsIdRoute = InsightsIdRouteImport.update({
+  id: '/insights_/$id',
+  path: '/insights/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectIdRoute = ProjectIdRouteImport.update({
@@ -91,8 +103,10 @@ export interface FileRoutesByFullPath {
   '/insights': typeof InsightsRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/leads': typeof AdminLeadsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/insights/$id': typeof InsightsIdRoute
   '/project/$id': typeof ProjectIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
@@ -105,8 +119,10 @@ export interface FileRoutesByTo {
   '/insights': typeof InsightsRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/leads': typeof AdminLeadsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/insights/$id': typeof InsightsIdRoute
   '/project/$id': typeof ProjectIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
@@ -120,8 +136,10 @@ export interface FileRoutesById {
   '/insights': typeof InsightsRoute
   '/portfolio': typeof PortfolioRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/leads': typeof AdminLeadsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/upload-project': typeof AdminUploadProjectRoute
+  '/insights_/$id': typeof InsightsIdRoute
   '/project/$id': typeof ProjectIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/upload-insights/article-link': typeof AdminUploadInsightsArticleLinkRoute
@@ -136,8 +154,10 @@ export interface FileRouteTypes {
     | '/insights'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/admin/leads'
     | '/admin/settings'
     | '/admin/upload-project'
+    | '/insights/$id'
     | '/project/$id'
     | '/admin/'
     | '/admin/upload-insights/article-link'
@@ -150,8 +170,10 @@ export interface FileRouteTypes {
     | '/insights'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/admin/leads'
     | '/admin/settings'
     | '/admin/upload-project'
+    | '/insights/$id'
     | '/project/$id'
     | '/admin'
     | '/admin/upload-insights/article-link'
@@ -164,8 +186,10 @@ export interface FileRouteTypes {
     | '/insights'
     | '/portfolio'
     | '/sitemap.xml'
+    | '/admin/leads'
     | '/admin/settings'
     | '/admin/upload-project'
+    | '/insights_/$id'
     | '/project/$id'
     | '/admin/'
     | '/admin/upload-insights/article-link'
@@ -179,8 +203,10 @@ export interface RootRouteChildren {
   InsightsRoute: typeof InsightsRoute
   PortfolioRoute: typeof PortfolioRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminLeadsRoute: typeof AdminLeadsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUploadProjectRoute: typeof AdminUploadProjectRoute
+  InsightsIdRoute: typeof InsightsIdRoute
   ProjectIdRoute: typeof ProjectIdRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminUploadInsightsArticleLinkRoute: typeof AdminUploadInsightsArticleLinkRoute
@@ -238,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/leads': {
+      id: '/admin/leads'
+      path: '/admin/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AdminLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/admin/settings'
@@ -250,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/upload-project'
       fullPath: '/admin/upload-project'
       preLoaderRoute: typeof AdminUploadProjectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights_/$id': {
+      id: '/insights_/$id'
+      path: '/insights/$id'
+      fullPath: '/insights/$id'
+      preLoaderRoute: typeof InsightsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/project/$id': {
@@ -283,8 +323,10 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsRoute: InsightsRoute,
   PortfolioRoute: PortfolioRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminLeadsRoute: AdminLeadsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUploadProjectRoute: AdminUploadProjectRoute,
+  InsightsIdRoute: InsightsIdRoute,
   ProjectIdRoute: ProjectIdRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminUploadInsightsArticleLinkRoute: AdminUploadInsightsArticleLinkRoute,

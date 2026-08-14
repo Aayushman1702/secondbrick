@@ -28,7 +28,7 @@ import {
   ExternalLink,
   Edit,
 } from "lucide-react";
-import { getProjectById, getStoredProjects, ProjectItem, isAdminAuthenticated } from "@/lib/contentStore";
+import { getProjectById, getStoredProjects, ProjectItem, isAdminAuthenticated, saveInquiry } from "@/lib/contentStore";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
@@ -50,7 +50,9 @@ export const Route = createFileRoute("/project/$id")({
 
 function ProjectOnePager() {
   const { id } = useParams({ from: "/project/$id" });
-  const [project, setProject] = useState<ProjectItem | null>(null);
+  const [project, setProject] = useState<ProjectItem | null>(() => {
+    return getProjectById(id) || getStoredProjects()[0] || null;
+  });
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [copiedLink, setCopiedLink] = useState(false);
   const [showInquireModal, setShowInquireModal] = useState(false);
@@ -70,7 +72,6 @@ function ProjectOnePager() {
       if (found) {
         setProject(found);
       } else {
-        // Fallback to first available project
         const all = getStoredProjects();
         if (all.length > 0) {
           setProject(all[0]);
@@ -84,6 +85,10 @@ function ProjectOnePager() {
   }, [id]);
 
   if (!project) {
+    const fallback = getStoredProjects()[0];
+    if (fallback) {
+      setProject(fallback);
+    }
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">
         <Building2 className="w-12 h-12 text-[#6D0D12]/40 animate-pulse mb-4" />
@@ -117,7 +122,19 @@ function ProjectOnePager() {
 
   const handleInquireSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!inquireName.trim() || !inquirePhone.trim()) {
+      alert("Please enter your name and phone number.");
+      return;
+    }
     setInquireSuccess(true);
+    saveInquiry({
+      name: inquireName.trim(),
+      phone: inquirePhone.trim(),
+      email: inquireEmail.trim(),
+      message: `Inquiry for ${project.title}`,
+      source: "Project One-Pager",
+      projectOrArticleTitle: project.title,
+    });
     setTimeout(() => {
       setInquireSuccess(false);
       setShowInquireModal(false);
@@ -163,7 +180,7 @@ function ProjectOnePager() {
       </div>
 
       {/* EXECUTIVE HERO BANNER */}
-      <section className="relative bg-[#3D2822] text-[#FBF1E9] overflow-hidden pt-12 pb-14 sm:pb-20 border-b border-[#6D0D12]/30 print:bg-white print:text-black print:p-0 print:border-none">
+      <section className="relative bg-[#3D2822] text-[#FBF1E9] overflow-hidden pt-28 sm:pt-36 pb-16 sm:pb-24 border-b border-[#6D0D12]/30 print:bg-white print:text-black print:p-0 print:border-none">
         {/* Background ambient lighting */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#3D2822] via-[#3D2822]/90 to-[#6D0D12]/40 pointer-events-none print:hidden" />
         <div
@@ -174,7 +191,7 @@ function ProjectOnePager() {
         <div className="container-x relative z-10">
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left info column */}
-            <div className="lg:col-span-7 space-y-4">
+            <div className="lg:col-span-7 space-y-5">
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="bg-[#6D0D12] text-[#FBF1E9] px-3 py-1 text-[11px] tracking-[0.2em] uppercase font-bold border border-[#6D0D12]">
@@ -200,42 +217,29 @@ function ProjectOnePager() {
                 {project.tagline || project.description}
               </p>
 
-              {/* Quick Spec Highlights Bar */}
+              {/* Quick Spec Highlights Bar (4 Editable Cards) */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-white/15 print:border-slate-300">
-                <div className="bg-white/5 print:bg-slate-100 p-2.5 border border-white/10 print:border-slate-300">
-                  <div className="text-[10px] uppercase tracking-wider text-[#FBF1E9]/60 print:text-slate-500 font-semibold">Total Area</div>
-                  <div className="text-sm sm:text-base font-serif font-bold text-[#FBF1E9] print:text-black mt-0.5">{project.sqft} sq.ft</div>
-                </div>
-
-                <div className="bg-white/5 print:bg-slate-100 p-2.5 border border-white/10 print:border-slate-300">
-                  <div className="text-[10px] uppercase tracking-wider text-[#FBF1E9]/60 print:text-slate-500 font-semibold">Timeline / Possession</div>
-                  <div className="text-sm sm:text-base font-serif font-bold text-[#FBF1E9] print:text-black mt-0.5">{project.possessionDate || project.date || "Ready"}</div>
-                </div>
-
-                <div className="bg-white/5 print:bg-slate-100 p-2.5 border border-white/10 print:border-slate-300">
-                  <div className="text-[10px] uppercase tracking-wider text-[#FBF1E9]/60 print:text-slate-500 font-semibold">Configuration / Typology</div>
-                  <div className="text-sm sm:text-base font-serif font-bold text-[#FBF1E9] print:text-black mt-0.5">{project.totalUnits || project.type}</div>
-                </div>
-
-                <div className="bg-white/5 print:bg-slate-100 p-2.5 border border-white/10 print:border-slate-300">
-                  <div className="text-[10px] uppercase tracking-wider text-[#FBF1E9]/60 print:text-slate-500 font-semibold">Price / Valuation</div>
-                  <div className="text-sm sm:text-base font-serif font-bold text-[#FBF1E9] print:text-black mt-0.5">{project.priceRange || "On Request"}</div>
-                </div>
+                {(project.heroSpecCards && project.heroSpecCards.length > 0
+                  ? project.heroSpecCards
+                  : [
+                      { label: "Total Area", value: project.sqft ? `${project.sqft} sq.ft` : "2,400 sq.ft" },
+                      { label: "Timeline / Possession", value: project.possessionDate || project.date || "Ready" },
+                      { label: "Configuration / Typology", value: project.totalUnits || project.type || "Residential" },
+                      { label: "Price / Valuation", value: project.priceRange || "On Request" },
+                    ]
+                ).map((spec, i) => (
+                  <div key={i} className="bg-white/5 print:bg-slate-100 p-2.5 border border-white/10 print:border-slate-300">
+                    <div className="text-[10px] uppercase tracking-wider text-[#FBF1E9]/60 print:text-slate-500 font-semibold">{spec.label}</div>
+                    <div className="text-sm sm:text-base font-serif font-bold text-[#FBF1E9] print:text-black mt-0.5">{spec.value}</div>
+                  </div>
+                ))}
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-3 pt-2 print:hidden">
                 <button
-                  onClick={() => setShowInquireModal(true)}
-                  className="bg-[#6D0D12] hover:bg-[#550a0e] text-[#FBF1E9] px-6 py-3 text-xs tracking-[0.2em] uppercase font-bold transition-all shadow-md inline-flex items-center gap-2 cursor-pointer"
-                >
-                  <PhoneCall className="w-4 h-4" />
-                  <span>Book Private Presentation</span>
-                </button>
-
-                <button
                   onClick={handlePrint}
-                  className="bg-white/10 hover:bg-white/20 text-[#FBF1E9] px-5 py-3 text-xs tracking-[0.16em] uppercase font-semibold border border-white/25 transition-all inline-flex items-center gap-2 cursor-pointer"
+                  className="bg-white/10 hover:bg-white/20 text-[#FBF1E9] px-6 py-3 text-xs tracking-[0.16em] uppercase font-semibold border border-white/25 transition-all inline-flex items-center gap-2 cursor-pointer"
                 >
                   <Download className="w-4 h-4 text-[#FBF1E9]" />
                   <span>Download Project PDF</span>
@@ -286,106 +290,119 @@ function ProjectOnePager() {
       {/* EXECUTIVE SPECIFICATIONS & METRICS GRID */}
       <section className="section-y border-b border-[#6D0D12]/15 bg-[#FAF4EE] print:bg-white print:py-4">
         <div className="container-x">
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <div className="eyebrow">EXECUTIVE BRIEF</div>
+          <div className="text-center max-w-xl mx-auto mb-10 relative">
+            <div className="eyebrow">{project.parametersEyebrow || "EXECUTIVE BRIEF"}</div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#3D2822] mt-1">
-              Project Parameters & Key Metrics
+              {project.parametersTitle || "Project Parameters & Key Metrics"}
             </h2>
             <p className="text-xs text-[#3D2822]/70 mt-1">
-              Detailed breakdown of zoning, built area, regulatory compliance, and architectural leadership.
+              {project.parametersSubtext || "Detailed breakdown of zoning, built area, regulatory compliance, and architectural leadership."}
             </p>
+
+            <div className="mt-3 flex justify-center print:hidden">
+              <a
+                href={`/admin/upload-project?edit=${project.id}`}
+                className="inline-flex items-center gap-1.5 text-[11px] tracking-wider uppercase font-semibold text-[#6D0D12] hover:text-[#3D2822] bg-[#6D0D12]/5 hover:bg-[#6D0D12]/10 border border-[#6D0D12]/20 px-3 py-1 rounded transition-colors"
+              >
+                <Edit className="w-3 h-3" />
+                <span>Edit Cards & Metrics</span>
+              </a>
+            </div>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {/* Card 1: Typology & Area */}
-            <div className="bg-white border border-[#6D0D12]/15 p-6 shadow-2xs space-y-3">
-              <div className="w-10 h-10 bg-[#FBF1E9] text-[#6D0D12] flex items-center justify-center border border-[#6D0D12]/20">
-                <Layers className="w-5 h-5" />
-              </div>
-              <h3 className="text-base font-serif font-bold text-[#3D2822]">Scale & Configuration</h3>
-              <ul className="text-xs space-y-2 text-[#3D2822]/80">
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Built-up Footprint:</span>
-                  <span className="font-semibold text-[#3D2822]">{project.sqft} sq.ft</span>
-                </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Typology:</span>
-                  <span className="font-semibold text-[#3D2822]">{project.type}</span>
-                </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Total Inventory:</span>
-                  <span className="font-semibold text-[#3D2822]">{project.totalUnits || "Exclusive Limited Edition"}</span>
-                </li>
-                <li className="flex justify-between">
-                  <span className="text-slate-500">Project Status:</span>
-                  <span className="font-semibold text-[#6D0D12]">{project.status}</span>
-                </li>
-              </ul>
-            </div>
+            {(project.parameterCards && project.parameterCards.length > 0
+              ? project.parameterCards
+              : [
+                  {
+                    id: "card-1",
+                    title: "Scale & Configuration",
+                    items: [
+                      { label: "Built-up Footprint", value: `${project.sqft} sq.ft` },
+                      { label: "Typology", value: project.type },
+                      { label: "Total Inventory", value: project.totalUnits || "Exclusive Limited Edition" },
+                      { label: "Project Status", value: project.status },
+                    ],
+                  },
+                  {
+                    id: "card-2",
+                    title: "Governance & Delivery",
+                    items: [
+                      { label: "RERA Registration", value: project.reraNumber || "Approved / Compliant" },
+                      { label: "Delivery Partner", value: "PRO-DEV × Nawander Group" },
+                      { label: "Design Architect", value: project.architect || "PRO-DEV Architectural Studio" },
+                      { label: "Target Handover", value: project.possessionDate || project.date || "Ready" },
+                    ],
+                  },
+                  {
+                    id: "card-3",
+                    title: "Strategic Micro-Market",
+                    items: [
+                      { label: "Location", value: project.location || "Maharashtra" },
+                      { label: "Valuation Range", value: project.priceRange || "Available on Application" },
+                      { label: "Investment Class", value: "Prime Grade-A Capital Growth" },
+                      { label: "GPS Navigation", value: project.googleMapsLink ? "Google Maps" : "Prime Corridor" },
+                    ],
+                  },
+                ]
+            ).map((card, cardIdx) => (
+              <div
+                key={card.id || cardIdx}
+                className="bg-white border border-[#6D0D12]/15 p-6 shadow-2xs space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="w-10 h-10 bg-[#FBF1E9] text-[#6D0D12] flex items-center justify-center border border-[#6D0D12]/20">
+                    {cardIdx % 3 === 0 ? (
+                      <Layers className="w-5 h-5" />
+                    ) : cardIdx % 3 === 1 ? (
+                      <ShieldCheck className="w-5 h-5" />
+                    ) : (
+                      <MapPin className="w-5 h-5" />
+                    )}
+                  </div>
+                  <h3 className="text-base font-serif font-bold text-[#3D2822]">{card.title}</h3>
+                  <ul className="text-xs space-y-2 text-[#3D2822]/80">
+                    {(card.items || []).map((item, itemIdx) => {
+                      const isGpsLink =
+                        (item.label.toLowerCase().includes("gps") || item.label.toLowerCase().includes("map")) &&
+                        project.googleMapsLink;
 
-            {/* Card 2: Regulatory & Developers */}
-            <div className="bg-white border border-[#6D0D12]/15 p-6 shadow-2xs space-y-3">
-              <div className="w-10 h-10 bg-[#FBF1E9] text-[#6D0D12] flex items-center justify-center border border-[#6D0D12]/20">
-                <ShieldCheck className="w-5 h-5" />
+                      return (
+                        <li
+                          key={itemIdx}
+                          className={`flex justify-between items-center ${
+                            itemIdx < card.items.length - 1 ? "border-b border-slate-100 pb-1.5" : ""
+                          }`}
+                        >
+                          <span className="text-slate-500">{item.label}:</span>
+                          {isGpsLink ? (
+                            <a
+                              href={project.googleMapsLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#6D0D12] font-semibold hover:underline inline-flex items-center gap-1 text-right ml-2"
+                            >
+                              <span>{item.value}</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          ) : (
+                            <span
+                              className={`font-semibold text-right ml-2 ${
+                                item.label.toLowerCase().includes("rera") || item.label.toLowerCase().includes("status")
+                                  ? "text-[#6D0D12]"
+                                  : "text-[#3D2822]"
+                              }`}
+                            >
+                              {item.value}
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               </div>
-              <h3 className="text-base font-serif font-bold text-[#3D2822]">Governance & Delivery</h3>
-              <ul className="text-xs space-y-2 text-[#3D2822]/80">
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">RERA Registration:</span>
-                  <span className="font-mono font-bold text-[#6D0D12]">{project.reraNumber || "Approved / Compliant"}</span>
-                </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Delivery Partner:</span>
-                  <span className="font-semibold text-[#3D2822]">PRO-DEV × Nawander Group</span>
-                </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Design Architect:</span>
-                  <span className="font-semibold text-[#3D2822]">{project.architect || "PRO-DEV Architecture"}</span>
-                </li>
-                <li className="flex justify-between">
-                  <span className="text-slate-500">Target Handover:</span>
-                  <span className="font-semibold text-[#3D2822]">{project.possessionDate || project.date || "Ready"}</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Card 3: Location & Access */}
-            <div className="bg-white border border-[#6D0D12]/15 p-6 shadow-2xs space-y-3 sm:col-span-2 lg:col-span-1">
-              <div className="w-10 h-10 bg-[#FBF1E9] text-[#6D0D12] flex items-center justify-center border border-[#6D0D12]/20">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <h3 className="text-base font-serif font-bold text-[#3D2822]">Strategic Micro-Market</h3>
-              <ul className="text-xs space-y-2 text-[#3D2822]/80">
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Location:</span>
-                  <span className="font-semibold text-[#3D2822]">{project.location || "Maharashtra"}</span>
-                </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Valuation Range:</span>
-                  <span className="font-semibold text-[#6D0D12]">{project.priceRange || "Available on Application"}</span>
-                </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1">
-                  <span className="text-slate-500">Investment Class:</span>
-                  <span className="font-semibold text-[#3D2822]">Prime Grade-A Capital Growth</span>
-                </li>
-                <li className="flex justify-between items-center">
-                  <span className="text-slate-500">GPS Navigation:</span>
-                  {project.googleMapsLink ? (
-                    <a
-                      href={project.googleMapsLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#6D0D12] font-semibold hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>Google Maps</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  ) : (
-                    <span className="text-slate-400">Prime Corridor</span>
-                  )}
-                </li>
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
       </section>

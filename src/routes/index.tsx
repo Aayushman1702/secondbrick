@@ -1,5 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, BadgeCheck, Building2, GraduationCap, Hammer, HandHeart, HeartHandshake } from "lucide-react";
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  Building2,
+  GraduationCap,
+  Hammer,
+  HandHeart,
+  HeartHandshake,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  ExternalLink,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Counter } from "@/components/Counter";
@@ -9,6 +21,7 @@ import hero from "@/assets/hero-home.jpg";
 import prodevFull from "@/assets/logo-prodev-full.png";
 import nawanderLogo from "@/assets/logo-nawander.png";
 import { ScrollInterestModal } from "@/components/ScrollInterestModal";
+import { getStoredBlogs, BlogItem } from "@/lib/contentStore";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,63 +57,204 @@ const promises = [
 
 function Home() {
   const [scrollY, setScrollY] = useState(0);
+  const [blogs, setBlogs] = useState<BlogItem[]>([]);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
+
   useEffect(() => {
     const h = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
 
+  useEffect(() => {
+    const loadBlogs = () => {
+      const all = getStoredBlogs();
+      const starred = all.filter((b) => b.featuredOnHomepage !== false);
+      setBlogs(starred.length > 0 ? starred : all);
+    };
+
+    loadBlogs();
+    window.addEventListener("content_store_updated", loadBlogs);
+    return () => window.removeEventListener("content_store_updated", loadBlogs);
+  }, []);
+
+  // Construct Hero Slides: Flagship Alibaug + Starred Blogs
+  const heroSlides = [
+    {
+      id: "hero_flagship",
+      title: "Why Invest in Alibaug",
+      subtitle: "The Next Coastal Growth Market",
+      category: "Coastal Strategy",
+      image: hero,
+      link: "/insights",
+      isExternal: false,
+    },
+    ...blogs.map((b) => ({
+      id: b.id,
+      title: b.title,
+      subtitle: b.excerpt || `By ${b.author} · ${b.date}`,
+      category: b.cat || "Perspectives",
+      image: b.featuredImage || hero,
+      link: b.articleUrl ? b.articleUrl : `/insights/${b.id}`,
+      isExternal: Boolean(b.articleUrl),
+    })),
+  ];
+
+  // Auto-advance hero slideshow every 6 seconds
+  useEffect(() => {
+    if (heroSlides.length <= 1 || isHeroPaused) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 6000);
+
+    return () => clearInterval(timer);
+  }, [heroSlides.length, isHeroPaused]);
+
+  const handlePrevSlide = () => {
+    setCurrentSlideIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const activeSlide = heroSlides[currentSlideIndex] || heroSlides[0];
+
+  // Dynamic font sizing and leading based on title length
+  const titleLen = activeSlide.title?.length || 0;
+  let dynamicFontSize = "clamp(3rem, 7.5vw, 5.8rem)";
+  let dynamicLeading = "leading-[0.95]";
+
+  if (titleLen > 75) {
+    dynamicFontSize = "clamp(1.8rem, 3.6vw, 2.8rem)";
+    dynamicLeading = "leading-[1.15]";
+  } else if (titleLen > 50) {
+    dynamicFontSize = "clamp(2.1rem, 4.5vw, 3.4rem)";
+    dynamicLeading = "leading-[1.08]";
+  } else if (titleLen > 28) {
+    dynamicFontSize = "clamp(2.5rem, 5.5vw, 4.4rem)";
+    dynamicLeading = "leading-[1.0]";
+  }
+
   return (
     <>
-      {/* HERO — layered cinematic */}
-      <section className="relative min-h-[100svh] overflow-hidden bg-cocoa grain">
-        {/* Parallax image */}
+      {/* HERO — DYNAMIC STARRED BLOGS SLIDESHOW */}
+      <section
+        className="relative min-h-[100svh] overflow-hidden bg-cocoa grain group"
+        onMouseEnter={() => setIsHeroPaused(true)}
+        onMouseLeave={() => setIsHeroPaused(false)}
+      >
+        {/* Parallax and crossfade background images */}
         <div
           className="absolute inset-0"
           style={{ transform: `translateY(${scrollY * 0.25}px) scale(1.08)` }}
         >
-          <img src={hero} alt="Alibaug coastline" className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-cocoa via-cocoa/40 to-cocoa/30" />
-          <div className="absolute inset-0 bg-gradient-to-r from-cocoa/70 via-transparent to-cocoa/50" />
+          {heroSlides.map((slide, idx) => {
+            const isCurrent = idx === currentSlideIndex;
+            return (
+              <div
+                key={slide.id || idx}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                  isCurrent ? "opacity-100 z-1" : "opacity-0 z-0 pointer-events-none"
+                }`}
+              >
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[8000ms] ease-out scale-100 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-cocoa via-cocoa/40 to-cocoa/30" />
+                <div className="absolute inset-0 bg-gradient-to-r from-cocoa/80 via-cocoa/35 to-transparent" />
+              </div>
+            );
+          })}
         </div>
 
         {/* Architectural grid overlay */}
-        <div className="absolute inset-0 opacity-[0.08]" style={{
-          backgroundImage:
-            "linear-gradient(to right, #FBF1E9 1px, transparent 1px), linear-gradient(to bottom, #FBF1E9 1px, transparent 1px)",
-          backgroundSize: "12vw 12vw",
-        }} />
+        <div
+          className="absolute inset-0 opacity-[0.08] pointer-events-none z-2"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, #FBF1E9 1px, transparent 1px), linear-gradient(to bottom, #FBF1E9 1px, transparent 1px)",
+            backgroundSize: "12vw 12vw",
+          }}
+        />
 
-        {/* Corner marks */}
-        
+        {/* Floating Side Navigation Buttons */}
+        <button
+          onClick={handlePrevSlide}
+          aria-label="Previous Slide"
+          className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 p-2 bg-transparent text-cream/70 hover:text-cream flex items-center justify-center transition-all cursor-pointer hover:scale-125 drop-shadow-md"
+          title="Previous Slide"
+        >
+          <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 stroke-[1.25]" />
+        </button>
 
-        
+        <button
+          onClick={handleNextSlide}
+          aria-label="Next Slide"
+          className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 p-2 bg-transparent text-cream/70 hover:text-cream flex items-center justify-center transition-all cursor-pointer hover:scale-125 drop-shadow-md"
+          title="Next Slide"
+        >
+          <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 stroke-[1.25]" />
+        </button>
 
-
-        {/* Content */}
-        <div className="container-x relative z-10 min-h-[100svh] flex flex-col justify-end pb-32 pt-40">
-          <div className="max-w-3xl reveal-x">
-            <h1 className="text-cream font-serif leading-[0.95]" style={{ fontSize: "clamp(3rem, 8vw, 6rem)" }}>
-              Why Invest in
-              <br />
-              <em className="italic text-cream/95">Alibaug</em>
+        {/* Main Hero Content */}
+        <div className="container-x relative z-10 min-h-[100svh] flex flex-col justify-end pb-28 pt-36">
+          <div className={`reveal-x transition-all duration-500 ${titleLen > 50 ? "max-w-4xl" : "max-w-3xl"}`}>
+            <h1
+              className={`text-cream font-serif tracking-tight transition-all duration-700 ${dynamicLeading}`}
+              style={{ fontSize: dynamicFontSize }}
+            >
+              {activeSlide.id === "hero_flagship" ? (
+                <>
+                  Why Invest in
+                  <br />
+                  <em className="italic text-cream/95">Alibaug</em>
+                </>
+              ) : activeSlide.title.includes(" — ") ? (
+                <>
+                  {activeSlide.title.split(" — ")[0]}
+                  <br />
+                  <em className="italic text-cream/95">— {activeSlide.title.split(" — ")[1]}</em>
+                </>
+              ) : (
+                activeSlide.title
+              )}
             </h1>
+
             <div className="mt-8 flex items-center gap-4 text-cream/80">
               <span className="w-12 h-px bg-cream/60" />
-              <span className="text-[11px] tracking-[0.32em] uppercase">The Next Coastal Growth Market</span>
+              <span className="text-[11px] tracking-[0.32em] uppercase font-sans line-clamp-1 max-w-xl">
+                {activeSlide.subtitle}
+              </span>
             </div>
+
             <div className="mt-12 flex flex-wrap gap-5">
-              <MagneticButton as="a" href="/insights" className="btn-primary">
-                Read More <ArrowUpRight className="w-4 h-4" />
-              </MagneticButton>
-              
+              {activeSlide.isExternal ? (
+                <a
+                  href={activeSlide.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary inline-flex items-center gap-2"
+                >
+                  <span>Read Article</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              ) : (
+                <MagneticButton as="a" href={activeSlide.link} className="btn-primary">
+                  <span>Read More</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </MagneticButton>
+              )}
             </div>
           </div>
-
-         
         </div>
 
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 text-cream/60 text-[10px] tracking-[0.4em] uppercase z-10">
+        {/* Scroll Cue (Center) */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 text-cream/60 text-[10px] tracking-[0.4em] uppercase z-10 pointer-events-none">
           <span className="w-8 h-px bg-cream/40 animate-pulse" />
           <span>Scroll to explore</span>
           <span className="w-8 h-px bg-cream/40 animate-pulse" />
@@ -110,11 +264,9 @@ function Home() {
       {/* ABOUT — overlapping typography */}
       <AboutSplit />
 
-      {/* STATS — architectural composition */}
-
 
       {/* FEATURED PROJECTS — horizontal luxury gallery */}
-      <section className="py-20 md:py-28 bg-cream">
+      <section className="pt-20 pb-8 md:pt-28 md:pb-10 bg-cream">
         <div className="container-x mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -131,7 +283,7 @@ function Home() {
           </p>
         </div>
         <HorizontalProjects />
-        <div className="container-x mt-12 md:mt-16 text-center">
+        <div className="container-x mt-8 md:mt-10 text-center">
           <MagneticButton as="a" href="/portfolio" className="btn-outline">
             View Full Portfolio
           </MagneticButton>
@@ -139,7 +291,7 @@ function Home() {
       </section>
 
       {/* PROMISES — 04 */}
-      <section id="promises" className="py-20 md:py-28 bg-cream relative overflow-hidden">
+      <section id="promises" className="pt-8 pb-20 md:pt-12 md:pb-28 bg-cream relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-[0.04]" />
         <div className="container-x relative">
           <div className="max-w-2xl">
@@ -271,12 +423,12 @@ function AboutSplit() {
 
           {/* Right side aligned text & CTA button */}
           <div className="lg:col-span-7 space-y-8 lg:pt-4">
-            <p className="text-xl md:text-2xl font-serif italic text-cocoa leading-relaxed">
+            <p className="text-xl md:text-2xl font-serif text-cocoa leading-relaxed font-normal not-italic">
               "Second Brick is a strategic partnership between PRO-DEV and Nawander Group,
               bringing together decades of collective experience across residential, commercial
               and infrastructure development."
             </p>
-            <p className="text-muted-foreground leading-relaxed max-w-xl">
+            <p className="font-serif text-cocoa/80 leading-relaxed max-w-xl text-base md:text-lg">
               Our shared commitment to quality, transparency and timely execution enables us
               to deliver projects that create lasting value for investors and homeowners alike.
             </p>

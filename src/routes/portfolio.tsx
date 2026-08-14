@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { MapPin, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeading } from "@/components/SectionHeading";
+import { PastExperienceLedger } from "@/components/PastExperienceLedger";
 import { getStoredProjects, getStoredHeroSlides } from "@/lib/contentStore";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
@@ -230,6 +231,29 @@ function Portfolio() {
   const [dynamicProjects, setDynamicProjects] = useState<Project[]>([]);
 
   useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash === "past" || hash === "ongoing" || hash === "upcoming") {
+        setActive(hash as TabId);
+        setTimeout(() => {
+          const el = document.getElementById("portfolio-list");
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+      }
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
+  const handleTabChange = (tabId: TabId) => {
+    setActive(tabId);
+    window.history.replaceState(null, "", `#${tabId}`);
+  };
+
+  useEffect(() => {
     const stored = getStoredProjects().map((p) => ({
       id: p.id,
       img: p.featuredImage || project1,
@@ -274,7 +298,7 @@ function Portfolio() {
             {tabs.map((t) => (
               <button
                 key={t.id}
-                onClick={() => setActive(t.id)}
+                onClick={() => handleTabChange(t.id)}
                 className={`px-5 py-3 text-[12px] tracking-[0.2em] uppercase transition-all relative cursor-pointer ${
                   active === t.id ? "text-brick font-bold" : "text-cocoa/60 hover:text-cocoa"
                 }`}
@@ -287,7 +311,9 @@ function Portfolio() {
             ))}
           </div>
 
-          {filtered.length === 0 ? (
+          {active === "past" ? (
+            <PastExperienceLedger />
+          ) : filtered.length === 0 ? (
             <div className="text-center py-24 text-muted-foreground">
               New projects in this category launching soon.
             </div>

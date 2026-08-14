@@ -13,6 +13,22 @@ export interface UspItem {
   desc?: string;
 }
 
+export interface ParameterCardItem {
+  label: string;
+  value: string;
+}
+
+export interface ParameterCard {
+  id?: string;
+  title: string;
+  items: ParameterCardItem[];
+}
+
+export interface HeroSpecCard {
+  label: string;
+  value: string;
+}
+
 export interface ProjectItem {
   id: string;
   title: string;
@@ -36,6 +52,11 @@ export interface ProjectItem {
   googleMapsLink?: string;
   virtualTourLink?: string;
   videoLink?: string;
+  heroSpecCards?: HeroSpecCard[];
+  parametersEyebrow?: string;
+  parametersTitle?: string;
+  parametersSubtext?: string;
+  parameterCards?: ParameterCard[];
   usps?: string[];
   uspTitle?: string;
   uspSubtext?: string;
@@ -63,6 +84,7 @@ export interface BlogItem {
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string;
+  featuredOnHomepage?: boolean;
   createdAt: string;
 }
 
@@ -209,6 +231,7 @@ const INITIAL_BLOGS: BlogItem[] = [
     author: "PRO-DEV Editorial",
     cat: "Market Updates",
     featuredImage: project2,
+    featuredOnHomepage: true,
     createdAt: new Date().toISOString(),
   },
   {
@@ -221,6 +244,7 @@ const INITIAL_BLOGS: BlogItem[] = [
     author: "Ar. Maheshkumar Nawander",
     cat: "Buying Guide",
     featuredImage: project3,
+    featuredOnHomepage: true,
     createdAt: new Date().toISOString(),
   },
   {
@@ -233,6 +257,7 @@ const INITIAL_BLOGS: BlogItem[] = [
     author: "Second Brick",
     cat: "Lifestyle",
     featuredImage: responsibility,
+    featuredOnHomepage: true,
     createdAt: new Date().toISOString(),
   },
 ];
@@ -303,6 +328,11 @@ export function getStoredBlogs(): BlogItem[] {
   }
 }
 
+export function getBlogById(id: string): BlogItem | undefined {
+  const blogs = getStoredBlogs();
+  return blogs.find((b) => b.id === id || b.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === id.toLowerCase());
+}
+
 export function saveBlog(blog: Omit<BlogItem, "id" | "createdAt">): BlogItem {
   const existing = getStoredBlogs();
   const newBlog: BlogItem = {
@@ -316,6 +346,23 @@ export function saveBlog(blog: Omit<BlogItem, "id" | "createdAt">): BlogItem {
     window.dispatchEvent(new Event("content_store_updated"));
   }
   return newBlog;
+}
+
+export function updateBlog(id: string, updatedData: Partial<BlogItem>): BlogItem | undefined {
+  const existing = getStoredBlogs();
+  let updatedBlog: BlogItem | undefined;
+  const updated = existing.map((b) => {
+    if (b.id === id) {
+      updatedBlog = { ...b, ...updatedData };
+      return updatedBlog;
+    }
+    return b;
+  });
+  if (typeof window !== "undefined") {
+    localStorage.setItem(BLOGS_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event("content_store_updated"));
+  }
+  return updatedBlog;
 }
 
 export function deleteProject(id: string) {
@@ -338,6 +385,21 @@ export function toggleFeaturedProject(id: string) {
   });
   if (typeof window !== "undefined") {
     localStorage.setItem(PROJECTS_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event("content_store_updated"));
+  }
+}
+
+export function toggleFeaturedBlog(id: string) {
+  const existing = getStoredBlogs();
+  const updated = existing.map((b) => {
+    if (b.id === id) {
+      const isCurrentlyFeatured = b.featuredOnHomepage !== false;
+      return { ...b, featuredOnHomepage: !isCurrentlyFeatured };
+    }
+    return b;
+  });
+  if (typeof window !== "undefined") {
+    localStorage.setItem(BLOGS_KEY, JSON.stringify(updated));
     window.dispatchEvent(new Event("content_store_updated"));
   }
 }
@@ -451,6 +513,114 @@ export function deleteHeroSlide(id: string) {
   const updated = existing.filter((s) => s.id !== id);
   if (typeof window !== "undefined") {
     localStorage.setItem(HERO_SLIDES_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event("content_store_updated"));
+  }
+}
+
+export interface InquiryItem {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  city?: string;
+  projectOrArticleTitle?: string;
+  message?: string;
+  source: string;
+  date: string;
+  status: "New" | "Contacted" | "Archived";
+}
+
+const INQUIRIES_KEY = "secondbrick_inquiries_store";
+
+const INITIAL_INQUIRIES: InquiryItem[] = [
+  {
+    id: "inq_1",
+    name: "Vikram Malhotra",
+    phone: "+91 98201 44550",
+    email: "vikram.m@malhotraholding.com",
+    city: "Mumbai",
+    projectOrArticleTitle: "Coastal Villa Estates · Alibaug",
+    message: "Interested in acquiring a 4-BHK private sea-facing villa plot for family retreat.",
+    source: "Project One-Pager",
+    date: "2026-08-14 18:30",
+    status: "New",
+  },
+  {
+    id: "inq_2",
+    name: "Dr. Ananya Deshmukh",
+    phone: "+91 98902 11223",
+    email: "ananya.deshmukh@apollo.org",
+    city: "Pune",
+    projectOrArticleTitle: "Urban Redevelopment & High-Yield Assets",
+    message: "Requested strategic advisory regarding upcoming commercial & township pre-launch allocations.",
+    source: "Blog One-Pager",
+    date: "2026-08-14 14:15",
+    status: "New",
+  },
+  {
+    id: "inq_3",
+    name: "Siddharth Rao",
+    phone: "+91 97654 32100",
+    email: "siddharth@raocapital.in",
+    city: "Dubai / Mumbai",
+    projectOrArticleTitle: "General Investment Advisory",
+    message: "Looking for high-appreciation coastal land parcels in Maharashtra coastal corridor.",
+    source: "Homepage Interest Popup",
+    date: "2026-08-13 11:45",
+    status: "Contacted",
+  },
+];
+
+export function getStoredInquiries(): InquiryItem[] {
+  if (typeof window === "undefined") return INITIAL_INQUIRIES;
+  try {
+    const data = localStorage.getItem(INQUIRIES_KEY);
+    if (!data) {
+      localStorage.setItem(INQUIRIES_KEY, JSON.stringify(INITIAL_INQUIRIES));
+      return INITIAL_INQUIRIES;
+    }
+    return JSON.parse(data);
+  } catch (e) {
+    return INITIAL_INQUIRIES;
+  }
+}
+
+export function saveInquiry(
+  inquiry: Omit<InquiryItem, "id" | "date" | "status"> & { status?: "New" | "Contacted" | "Archived" }
+): InquiryItem {
+  const existing = getStoredInquiries();
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
+
+  const newInq: InquiryItem = {
+    ...inquiry,
+    id: "inq_" + Date.now(),
+    date: dateStr,
+    status: inquiry.status || "New",
+  };
+
+  const updated = [newInq, ...existing];
+  if (typeof window !== "undefined") {
+    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event("content_store_updated"));
+  }
+  return newInq;
+}
+
+export function updateInquiryStatus(id: string, status: "New" | "Contacted" | "Archived") {
+  const existing = getStoredInquiries();
+  const updated = existing.map((inq) => (inq.id === id ? { ...inq, status } : inq));
+  if (typeof window !== "undefined") {
+    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new Event("content_store_updated"));
+  }
+}
+
+export function deleteInquiry(id: string) {
+  const existing = getStoredInquiries();
+  const updated = existing.filter((inq) => inq.id !== id);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(updated));
     window.dispatchEvent(new Event("content_store_updated"));
   }
 }

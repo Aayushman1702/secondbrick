@@ -19,8 +19,9 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
+  Inbox,
 } from "lucide-react";
-import { isAdminAuthenticated, loginAdmin, logoutAdmin } from "@/lib/contentStore";
+import { isAdminAuthenticated, loginAdmin, logoutAdmin, getStoredInquiries } from "@/lib/contentStore";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -33,10 +34,18 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
   const location = useLocation();
 
   useEffect(() => {
     setIsAuthed(isAdminAuthenticated());
+    const checkUnread = () => {
+      const inqs = getStoredInquiries();
+      setUnreadCount(inqs.filter((i) => i.status === "New").length);
+    };
+    checkUnread();
+    window.addEventListener("content_store_updated", checkUnread);
+    return () => window.removeEventListener("content_store_updated", checkUnread);
   }, []);
 
   const handleLoginSubmit = (e: React.FormEvent) => {
@@ -158,18 +167,46 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
           {/* Navigation Items */}
           <nav className="p-4 space-y-6">
-            <div>
+            <div className="space-y-1">
               <Link
                 to="/admin"
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   isCurrent("/admin")
                     ? "bg-[#6D0D12] text-[#FBF1E9] font-bold shadow-xs"
                     : "text-[#3D2822]/80 hover:bg-[#6D0D12]/10 hover:text-[#6D0D12]"
                 }`}
               >
-                <LayoutDashboard className="w-4 h-4" />
-                <span>Dashboard</span>
+                <div className="flex items-center gap-3">
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Dashboard</span>
+                </div>
+              </Link>
+
+              <Link
+                to="/admin/leads"
+                onClick={() => setSidebarOpen(false)}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  isCurrent("/admin/leads")
+                    ? "bg-[#6D0D12] text-[#FBF1E9] font-bold shadow-xs"
+                    : "text-[#3D2822]/80 hover:bg-[#6D0D12]/10 hover:text-[#6D0D12]"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Inbox className="w-4 h-4" />
+                  <span>Leads Inbox</span>
+                </div>
+                {unreadCount > 0 && (
+                  <span
+                    className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${
+                      isCurrent("/admin/leads")
+                        ? "bg-[#FBF1E9] text-[#6D0D12]"
+                        : "bg-red-600 text-white animate-pulse"
+                    }`}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
               </Link>
             </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { X, ChevronDown, ArrowRight, Check } from "lucide-react";
+import { saveInquiry } from "@/lib/contentStore";
 
 interface ScrollInterestModalProps {
   scrollThreshold?: number; // scroll distance in px before opening modal
@@ -55,7 +56,19 @@ export function ScrollInterestModal({ scrollThreshold = 350 }: ScrollInterestMod
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim() || !mobileNumber.trim()) {
+      alert("Please enter your name and contact number.");
+      return;
+    }
     setSubmitted(true);
+    saveInquiry({
+      name: name.trim(),
+      phone: `${countryCode} ${mobileNumber.trim()}`,
+      email: email.trim(),
+      city: city.trim(),
+      source: "Homepage Interest Popup",
+      message: `Preferred location / interest in ${city.trim() || "all projects"}`,
+    });
     setTimeout(() => {
       handleClose();
     }, 2400);
@@ -224,7 +237,7 @@ export function ScrollInterestModal({ scrollThreshold = 350 }: ScrollInterestMod
                   onClick={() => setAgreed(!agreed)}
                   className="text-[11px] sm:text-xs text-cream/80 leading-snug cursor-pointer select-none"
                 >
-                  I agree to be contacted by HoABL or its representative through SMS/ Email/ WhatsApp/ RCS or Call.
+                  I agree to be contacted by Second Brick or its representative through SMS/ Email/ WhatsApp/ RCS or Call.
                 </label>
               </div>
 
